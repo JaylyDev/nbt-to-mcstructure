@@ -3,7 +3,7 @@ import json
 from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String
 from progress_bar import track
 
-blocksj2b = json.loads(open('./blocksJ2B.json', 'r').read())
+blocksj2b = json.loads(open('./assets/blocksJ2B.json', 'r').read())
 data = { 'blockstates': {} }
 MC_VERSION = "1.19.70.02"
 
