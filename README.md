@@ -22,4 +22,4 @@ The reason this program is built in Python is because:
 
 3. Run `__main__.py`, the program converts all java structures in the `structures` folder to the bedrock structure format, and they should be generated in `structures` folder.
 
-**Make sure your computer has enough memory and spaces on disk to convert large NBT files!**
+⚠️**Make sure your computer has enough memory and spaces on disk to convert large NBT files!**
