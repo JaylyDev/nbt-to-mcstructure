@@ -1,10 +1,15 @@
 from time import time
 import json
-from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String
+from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String, TAG_Byte
 from progress_bar import track
 
 blocksj2b = json.loads(open('./assets/blocksJ2B.json', 'r').read())
-data = { 'blockstates': {} }
+data = {
+  'blockstates':{
+    'byte':['output_subtract_bit','upside_down_bit','wall_post_bit','top_slot_bit','hanging','open_bit','lit','powered_bit','output_lit_bit','in_wall_bit','button_pressed_bit','door_hinge_bit','upper_block_bit','update_bit'],
+    'int':['weirdo_direction','facing_direction','direction','repeater_delay','redstone_signal','candles','age','rotation','deprecated','vine_direction_bits','liquid_depth','composter_fill_level','growth','moisturized_amount']
+  }
+}
 MC_VERSION = "1.19.70.02"
 
 def getVersion (versionString: str) -> int:
@@ -84,17 +89,16 @@ def getBlockObject(dynamicblockid: str, format = 'bedrock'):
     
     for statename in stateslist:
       # Find bedrock edition state type
-      statetype = 'string'
       statevalue = stateslist[statename]
-      if statename in data['blockstates']:
-        statetype = data["blockstates"][statename].type
-        if statetype == 'int':
-          statevalue = float(statevalue)
-      
-      if statetype == 'string':
-        object["states"].value[statename] = TAG_String(statevalue)
+      if data['blockstates']['byte'].count(statename):
+        if statevalue == 'true':
+            object["states"].value[statename] = TAG_Byte(1)
+        else:
+          object["states"].value[statename] = TAG_Byte(0)
+      elif data['blockstates']['int'].count(statename):
+        object["states"].value[statename] = TAG_Int(int(statevalue))
       else:
-        raise f"State type {statetype} not implemented"
+        object["states"].value[statename] = TAG_String(statevalue)
     
     return object
 
