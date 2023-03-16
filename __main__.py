@@ -2,10 +2,10 @@ from rich.progress import Progress, TextColumn, BarColumn, DownloadColumn, Trans
 import pathlib
 import gzip
 import pynbt
-from time import time, sleep
+from time import time
 from java_structures import javaToBedrock
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, isdir
 import threading
 
 def convert(file):
@@ -58,14 +58,22 @@ def convert(file):
       progress.stop_task(task)
       progress.stop()
 
-      print(f"Wrote {mcstructureFile} in {round((time() - startTime) * 1000, 2)} ms")
+      print(f"Wrote {mcstructureFile} in {round((time() - startTime) * 1000, 2)} ms\n")
+
+def get_nbtFiles (dirpath: str) -> list[str]:
+  files = []
+  for f in listdir(dirpath):
+    path = join(dirpath, f)
+    if isfile(path) and f.endswith(".nbt"):
+      files.append(path)
+    elif isdir(path):
+      for file in get_nbtFiles(path):
+        files.append(file)
+  return files
 
 if __name__ == "__main__":  # pragma: no coverage
-  from os import listdir
-  from os.path import isfile, join
-
   structurePath = 'structures' ## path of structures
-  nbtFiles = [join(structurePath, f) for f in listdir(structurePath) if isfile(join(structurePath, f)) and f.endswith(".nbt")]
+  nbtFiles = get_nbtFiles(structurePath)
 
   if len(nbtFiles) == 0:
     print(f"There are 0 .nbt files in '{structurePath}' folder.")
