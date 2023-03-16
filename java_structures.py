@@ -1,6 +1,6 @@
 from time import time
 import json
-from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String, TAG_Byte
+from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String, TAG_Byte, TAG_Short
 from progress_bar import track
 
 blocksj2b = json.loads(open('./assets/blocksJ2B.json', 'r').read())
@@ -140,6 +140,39 @@ def javaToBedrock(structure: NBTFile):
       newPalette.append(getBlockObject(javaId, 'bedrock'))
   print(f"Finished applying palette in {round((time() - startTime) * 1000, 2)} ms")
 
+  block_position_data = {}
+
+  for index, entry in enumerate(newBlocks):
+    if entry != -1:
+      if newPalette[entry]['name'].value == 'minecraft:chest':
+        for a in blocks:
+          if a['state'].value == entry:
+            if 'LootTable' in a['nbt']:
+              block_position_data[str(index)]=TAG_Compound({
+                'block_entity_data':TAG_Compound({
+                  'Findable':TAG_Byte(0),
+                  'id':TAG_String('Chest'),
+                  'isMovable':TAG_Byte(1),
+                  'x':a['pos'][0],
+                  'y':a['pos'][1],
+                  'z':a['pos'][2],
+                  'LootTable':TAG_String(f"loot_tables/{a['nbt']['LootTable'].value[10:]}.json")
+                })
+              })
+            else:
+              block_position_data[str(index)]=TAG_Compound({
+                'block_entity_data':TAG_Compound({
+                  'Findable':TAG_Byte(0),
+                  'id':TAG_String('Chest'),
+                  'isMovable':TAG_Byte(1),
+                  'x':a['pos'][0],
+                  'y':a['pos'][1],
+                  'z':a['pos'][2],
+                  'Items': TAG_List(TAG_Compound,[{'Count':TAG_Byte(a['nbt']['Items'][0].get('Count').value),'Damage':TAG_Short(0),'Name':TAG_String(a['nbt']['Items'][0].get('id').value),'Slot':TAG_Byte(a['nbt']['Items'][0].get('Slot').value),'WasPickedUp':TAG_Byte(0)}])
+                })
+              })
+              
+
   newStructure = {
     'format_version': TAG_Int(1),
     'size': TAG_List(TAG_Int, oldsize),
@@ -153,7 +186,7 @@ def javaToBedrock(structure: NBTFile):
       'palette': TAG_Compound({
         'default': TAG_Compound({
           'block_palette': TAG_List(TAG_Compound, newPalette),
-          'block_position_data': TAG_Compound({})
+          'block_position_data': TAG_Compound(block_position_data)
         })
       })
     })
