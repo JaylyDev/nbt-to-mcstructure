@@ -1,9 +1,10 @@
 from time import time
-import json
+import json, re
 from pynbt import NBTFile, TAG_Compound,TAG_Int, TAG_List, TAG_String, TAG_Byte, TAG_Short
 from progress_bar import track
 
 blocksj2b = json.loads(open('./assets/blocksJ2B.json', 'r').read())
+bedsj2b = json.loads(open('./assets/bedsJ2B.json', 'r').read())
 data = {
   'blockstates':{
     'byte':['output_subtract_bit','upside_down_bit','wall_post_bit','top_slot_bit','hanging','open_bit','lit','powered_bit','output_lit_bit','in_wall_bit','button_pressed_bit','door_hinge_bit','upper_block_bit','update_bit'],
@@ -12,13 +13,20 @@ data = {
 }
 MC_VERSION = "1.19.70.02"
 
+def checkEntry(blocks, entry):
+  for block in blocks:
+    if block['state'].value == entry:
+      return True, block
+
+  return False, block
+
 def getItems(items):
   itemsList = []
 
   for index in range(len(items)):
     itemsList.append(
       {
-        'Count':TAG_Byte(items[index].get('Count').value),'Damage':TAG_Short(0),'Name':TAG_String(items[index].get('id').value),'Slot':TAG_Byte(items[index].get('Slot').value),'WasPickedUp':TAG_Byte(0)
+        'Count': TAG_Byte(items[index].get('Count').value),'Damage': TAG_Short(0),'Name': TAG_String(items[index].get('id').value),'Slot':TAG_Byte(items[index].get('Slot').value),'WasPickedUp': TAG_Byte(0)
       }
     )
 
@@ -156,53 +164,62 @@ def javaToBedrock(structure: NBTFile):
 
   for index, entry in enumerate(newBlocks):
     if entry != -1:
+      condition, block = checkEntry(blocks, entry)
       match newPalette[entry]['name'].value:
         case 'minecraft:chest':
-          for block in blocks:
-            if block['state'].value == entry:
-              if 'LootTable' in block['nbt']:
-                block_position_data[str(index)]=TAG_Compound({
-                  'block_entity_data':TAG_Compound({
-                    'Findable':TAG_Byte(0),
-                    'id':TAG_String('Chest'),
-                    'isMovable':TAG_Byte(1),
-                    'x':a['pos'][0],
-                    'y':a['pos'][1],
-                    'z':a['pos'][2],
-                    'LootTable':TAG_String(f"loot_tables/{block['nbt']['LootTable'].value[10:]}.json")
-                  })
-                })
-              else:
-                block_position_data[str(index)]=TAG_Compound({
-                  'block_entity_data':TAG_Compound({
-                    'Findable':TAG_Byte(0),
-                    'id':TAG_String('Chest'),
-                    'isMovable':TAG_Byte(1),
-                    'x':a['pos'][0],
-                    'y':a['pos'][1],
-                    'z':a['pos'][2],
-                    'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items']))
-                  })
-                })
-          continue
-        case 'minecraft:furnace':
-          print('furnace')
-          for block in blocks:
-            if block['state'].value == entry:
-              block_position_data[str(index)]=TAG_Compound({
-                'block_entity_data':TAG_Compound({
-                  'Findable':TAG_Byte(0),
-                  'id':TAG_String('Furnace'),
-                  'isMovable':TAG_Byte(1),
-                  'x':block['pos'][0],
-                  'y':block['pos'][1],
-                  'z':block['pos'][2],
-                  'BurnTime':TAG_Short(block['nbt']['BurnTime'].value),
-                  'CookTime':TAG_Short(block['nbt']['CookTime'].value),
-                  'BurnDuration':TAG_Short(block['nbt']['CookTimeTotal'].value),
-                  'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items'])),
+          if 'LootTable' in block['nbt']:
+            block_position_data[str(index)]=TAG_Compound({
+              'block_entity_data': TAG_Compound({
+                'Findable': TAG_Byte(0),
+                'id': TAG_String('Chest'),
+                'isMovable': TAG_Byte(1),
+                'x': block['pos'][0],
+                'y': block['pos'][1],
+                'z': block['pos'][2],
+                'LootTable': TAG_String(f"loot_tables/{block['nbt']['LootTable'].value[10:]}.json")
+              })
+            })
+          else:
+            block_position_data[str(index)]=TAG_Compound({
+              'block_entity_data': TAG_Compound({
+                'Findable': TAG_Byte(0),
+                'id': TAG_String('Chest'),
+                'isMovable': TAG_Byte(1),
+                'x': block['pos'][0],
+                'y': block['pos'][1],
+                'z': block['pos'][2],
+                'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items']))
                 })
               })
+          continue
+        case 'minecraft:furnace':
+          block_position_data[str(index)]=TAG_Compound({
+            'block_entity_data': TAG_Compound({
+              'Findable': TAG_Byte(0),
+              'id': TAG_String('Furnace'),
+              'isMovable': TAG_Byte(1),
+              'x': block['pos'][0],
+              'y': block['pos'][1],
+              'z': block['pos'][2],
+              'BurnTime': TAG_Short(block['nbt']['BurnTime'].value),
+              'CookTime': TAG_Short(block['nbt']['CookTime'].value),
+              'BurnDuration': TAG_Short(block['nbt']['CookTimeTotal'].value),
+              'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items'])),
+            })
+          })
+          continue
+        case 'minecraft:bed':
+          block_position_data[str(index)]=TAG_Compound({
+            'block_entity_data': TAG_Compound({
+              'Findable': TAG_Byte(0),
+              'id': TAG_String('Furnace'),
+              'isMovable': TAG_Byte(1),
+              'x': block['pos'][0],
+              'y': block['pos'][1],
+              'z': block['pos'][2],
+              'color': TAG_Byte(bedsj2b[palette[entry]['Name'].value])
+            })
+          })
           continue
         case _:
           continue
