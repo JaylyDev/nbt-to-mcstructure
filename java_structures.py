@@ -12,6 +12,18 @@ data = {
 }
 MC_VERSION = "1.19.70.02"
 
+def getItems(items):
+  itemsList = []
+
+  for index in range(len(items)):
+    itemsList.append(
+      {
+        'Count':TAG_Byte(items[index].get('Count').value),'Damage':TAG_Short(0),'Name':TAG_String(items[index].get('id').value),'Slot':TAG_Byte(items[index].get('Slot').value),'WasPickedUp':TAG_Byte(0)
+      }
+    )
+
+  return itemsList
+
 def getVersion (versionString: str) -> int:
   def getHex (n):
     output = hex(int(n))[2:]
@@ -144,34 +156,56 @@ def javaToBedrock(structure: NBTFile):
 
   for index, entry in enumerate(newBlocks):
     if entry != -1:
-      if newPalette[entry]['name'].value == 'minecraft:chest':
-        for a in blocks:
-          if a['state'].value == entry:
-            if 'LootTable' in a['nbt']:
+      match newPalette[entry]['name'].value:
+        case 'minecraft:chest':
+          for block in blocks:
+            if block['state'].value == entry:
+              if 'LootTable' in block['nbt']:
+                block_position_data[str(index)]=TAG_Compound({
+                  'block_entity_data':TAG_Compound({
+                    'Findable':TAG_Byte(0),
+                    'id':TAG_String('Chest'),
+                    'isMovable':TAG_Byte(1),
+                    'x':a['pos'][0],
+                    'y':a['pos'][1],
+                    'z':a['pos'][2],
+                    'LootTable':TAG_String(f"loot_tables/{block['nbt']['LootTable'].value[10:]}.json")
+                  })
+                })
+              else:
+                block_position_data[str(index)]=TAG_Compound({
+                  'block_entity_data':TAG_Compound({
+                    'Findable':TAG_Byte(0),
+                    'id':TAG_String('Chest'),
+                    'isMovable':TAG_Byte(1),
+                    'x':a['pos'][0],
+                    'y':a['pos'][1],
+                    'z':a['pos'][2],
+                    'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items']))
+                  })
+                })
+          continue
+        case 'minecraft:furnace':
+          print('furnace')
+          for block in blocks:
+            if block['state'].value == entry:
               block_position_data[str(index)]=TAG_Compound({
                 'block_entity_data':TAG_Compound({
                   'Findable':TAG_Byte(0),
-                  'id':TAG_String('Chest'),
+                  'id':TAG_String('Furnace'),
                   'isMovable':TAG_Byte(1),
-                  'x':a['pos'][0],
-                  'y':a['pos'][1],
-                  'z':a['pos'][2],
-                  'LootTable':TAG_String(f"loot_tables/{a['nbt']['LootTable'].value[10:]}.json")
+                  'x':block['pos'][0],
+                  'y':block['pos'][1],
+                  'z':block['pos'][2],
+                  'BurnTime':TAG_Short(block['nbt']['BurnTime'].value),
+                  'CookTime':TAG_Short(block['nbt']['CookTime'].value),
+                  'BurnDuration':TAG_Short(block['nbt']['CookTimeTotal'].value),
+                  'Items': TAG_List(TAG_Compound, getItems(block['nbt']['Items'])),
                 })
               })
-            else:
-              block_position_data[str(index)]=TAG_Compound({
-                'block_entity_data':TAG_Compound({
-                  'Findable':TAG_Byte(0),
-                  'id':TAG_String('Chest'),
-                  'isMovable':TAG_Byte(1),
-                  'x':a['pos'][0],
-                  'y':a['pos'][1],
-                  'z':a['pos'][2],
-                  'Items': TAG_List(TAG_Compound,[{'Count':TAG_Byte(a['nbt']['Items'][0].get('Count').value),'Damage':TAG_Short(0),'Name':TAG_String(a['nbt']['Items'][0].get('id').value),'Slot':TAG_Byte(a['nbt']['Items'][0].get('Slot').value),'WasPickedUp':TAG_Byte(0)}])
-                })
-              })
-              
+          continue
+        case _:
+          continue
 
   newStructure = {
     'format_version': TAG_Int(1),
