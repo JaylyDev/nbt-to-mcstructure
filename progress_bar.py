@@ -1,4 +1,13 @@
-from rich.progress import Task, Column, ProgressColumn, Text, Union, Sequence, ProgressType, Iterable, Optional, List, TextColumn, BarColumn, TimeRemainingColumn, Progress
+from rich.progress import Task, Column, ProgressColumn, DownloadColumn, Text, Union, Sequence, TransferSpeedColumn, ProgressType, Iterable, Optional, List, TextColumn, BarColumn, TimeRemainingColumn, Progress
+
+columns = (
+    TextColumn("[progress.description]{task.description}"),
+    BarColumn(),
+    DownloadColumn(),
+    TransferSpeedColumn(),
+    TextColumn("eta"),
+    TimeRemainingColumn(),
+)
 
 class TaskCompletedColumn(ProgressColumn):
     """Renders file size downloaded and total, e.g. '0.5/2.3 GB'.
