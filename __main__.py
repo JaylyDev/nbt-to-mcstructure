@@ -35,6 +35,7 @@ def convert(file):
     with Progress(*columns, refresh_per_second=30) as progress:
       task = progress.add_task("[cyan]Writing mcstructure...", total=size)
       global completed
+      global timer
       completed = 0
 
       def write (data: bytes):
@@ -43,19 +44,17 @@ def convert(file):
         completed += len(data)
 
       def renderWriteProgress():
-        progress.update(task, completed=completed, total=size)
+        global timer
+        progress.update(task, completed=completed)
         timer = threading.Timer(1 / 30, renderWriteProgress)
-        if completed > size:
-          timer.cancel()
-        else:
-          timer.start()
+        timer.start()
 
       renderWriteProgress()
       mcstructure.save(write, True)
       
       # stop progress as mcstructure file has been saved
+      timer.cancel()
       progress.update(task, completed=completed, total=completed)
-      progress.stop_task(task)
       progress.stop()
 
       print(f"Wrote {mcstructureFile} in {round((time() - startTime) * 1000, 2)} ms\n")
