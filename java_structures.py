@@ -75,13 +75,13 @@ def getItems(items):
     return itemsList
 
 
-def createDefaultBlockEntity(block):
+def createDefaultBlockEntity(block, id):
     return TAG_Compound(
         {
             "block_entity_data": TAG_Compound(
                 {
                     "Findable": TAG_Byte(0),
-                    "id": TAG_String("Chest"),
+                    "id": TAG_String(id),
                     "isMovable": TAG_Byte(1),
                     "x": block["pos"][0],
                     "y": block["pos"][1],
@@ -232,7 +232,9 @@ def javaToBedrock(structure: NBTFile):
             block = checkEntry(blocks, entry)
             match newPalette[entry]["name"].value:
                 case "minecraft:brewing_stand":
-                    block_position_data[str(index)] = createDefaultBlockEntity(block)
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "BrewingStand"
+                    )
                     block_position_data[str(index)]["block_entity_data"][
                         "CookTime"
                     ] = TAG_Short(block["nbt"]["BrewTime"].value)
@@ -243,7 +245,9 @@ def javaToBedrock(structure: NBTFile):
                         "Items"
                     ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
                 case "minecraft:chest":
-                    block_position_data[str(index)] = createDefaultBlockEntity(block)
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Chest"
+                    )
                     if "LootTable" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"][
                             "LootTable"
@@ -256,7 +260,9 @@ def javaToBedrock(structure: NBTFile):
                         ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
                     continue
                 case "minecraft:furnace":
-                    block_position_data[str(index)] = createDefaultBlockEntity(block)
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Furnace"
+                    )
                     block_position_data[str(index)]["block_entity_data"][
                         "BurnTime"
                     ] = TAG_Short(block["nbt"]["BurnTime"].value)
@@ -271,7 +277,9 @@ def javaToBedrock(structure: NBTFile):
                     ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
                     continue
                 case "minecraft:bed":
-                    block_position_data[str(index)] = createDefaultBlockEntity(block)
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Bed"
+                    )
                     block_position_data[str(index)]["block_entity_data"][
                         "color"
                     ] = TAG_Byte(bedsj2b[palette[entry]["Name"].value])
