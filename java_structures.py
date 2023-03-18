@@ -244,10 +244,16 @@ def javaToBedrock(structure: NBTFile):
                     block_position_data[str(index)]["block_entity_data"][
                         "Items"
                     ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
-                case "minecraft:chest":
-                    block_position_data[str(index)] = createDefaultBlockEntity(
-                        block, "Chest"
-                    )
+                case "minecraft:chest" | "minecraft:trapped_chest" | "minecraft:barrel":
+                    if newPalette[entry]["name"].value == "minecraft:barrel":
+                        block_position_data[str(index)] = createDefaultBlockEntity(
+                            block, "Barrel"
+                        )
+                    else:
+                        block_position_data[str(index)] = createDefaultBlockEntity(
+                            block, "Chest"
+                        )
+
                     if "LootTable" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"][
                             "LootTable"
