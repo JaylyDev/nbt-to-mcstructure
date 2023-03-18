@@ -1,4 +1,20 @@
-from rich.progress import Task, Column, ProgressColumn, Text, Union, Sequence, ProgressType, Iterable, Optional, List, TextColumn, BarColumn, TimeRemainingColumn, Progress
+from rich.progress import (
+    Task,
+    Column,
+    ProgressColumn,
+    Text,
+    Union,
+    Sequence,
+    ProgressType,
+    Iterable,
+    Optional,
+    List,
+    TextColumn,
+    BarColumn,
+    TimeRemainingColumn,
+    Progress,
+)
+
 
 class TaskCompletedColumn(ProgressColumn):
     """Renders file size downloaded and total, e.g. '0.5/2.3 GB'.
@@ -26,6 +42,7 @@ class TaskCompletedColumn(ProgressColumn):
         download_text = Text(download_status, style="progress.download")
         return download_text
 
+
 class TransferSpeedColumn(ProgressColumn):
     """Renders human readable transfer speed."""
 
@@ -36,6 +53,7 @@ class TransferSpeedColumn(ProgressColumn):
             return Text("?", style="progress.data.speed")
         data_speed = str(round(speed, 2) if speed < 100000 else int(speed))
         return Text(f"{data_speed}/s", style="progress.data.speed")
+
 
 def track(
     sequence: Union[Sequence[ProgressType], Iterable[ProgressType]],
