@@ -39,19 +39,19 @@ jobs:
 
       - name: Create Release Asset
         run: |
-          built_path=nbt-to-mcstructure_v${{ github.event.release.tag_name }}_$RUNNER_OS_${{ matrix.cfg.architecture }}.zip
+          built_path=nbt-to-mcstructure_v${{ github.event.release.tag_name }}_${{ runner.os }}_${{ matrix.cfg.architecture }}.zip
           echo "BUILT_PATH=$built_path" >> $GITHUB_ENV
           cp ./structures ./dist -r
           cp ./assets ./dist -r
           rm ./dist/assets/demo_video.gif
           rm ./dist/assets/vanilla_structures.zip
           cd dist
-          if [ "$RUNNER_OS" == "Windows" ]; then
+          if [ "${{ runner.os }}" == "Windows" ]; then
             7z a $built_path .
-          elif [ "$RUNNER_OS" == "macOS" ]; then
+          elif [ "${{ runner.os }}" == "macOS" ]; then
             zip -r $built_path .
           else
-            echo "$RUNNER_OS not supported"
+            echo "${{ runner.os }} not supported"
             exit 1
           cd ..
 
