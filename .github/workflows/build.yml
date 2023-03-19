@@ -53,6 +53,7 @@ jobs:
           else
             echo "${{ runner.os }} not supported"
             exit 1
+          fi
           cd ..
 
       - name: Upload Release Asset
