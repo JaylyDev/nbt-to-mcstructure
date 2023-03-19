@@ -265,6 +265,13 @@ def javaToBedrock(structure: NBTFile):
                             "Items"
                         ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
                     continue
+                case "minecraft:comparator":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Comparator"
+                    )
+                    block_position_data[str(index)]["block_entity_data"][
+                        "OutputSignal"
+                    ] = TAG_Int(block["nbt"]["OutputSignal"].value)
                 case "minecraft:furnace":
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Furnace"
