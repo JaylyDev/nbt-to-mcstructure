@@ -47,11 +47,12 @@ jobs:
 
           cd dist
           if [ "$RUNNER_OS" == "Windows" ]; then
-            zip -r $built_path nbt-to-mcstructure
+            7z a $built_path .
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            zip -r $built_path .
           else
             echo "$RUNNER_OS not supported"
             exit 1
-          fi
           cd ..
 
       - name: Upload Release Asset
