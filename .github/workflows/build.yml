@@ -18,7 +18,7 @@ jobs:
       matrix:
         cfg:
           - { os: windows-latest, python-version: "3.10", architecture: x64 }
-          - { os: windows-latest, python-version: "3.10", architecture: x86 }
+          # - { os: windows-latest, python-version: "3.10", architecture: x86 }
 
     steps:
       - uses: actions/checkout@v3
@@ -32,19 +32,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
-          pip install pillow
+          pip install pyinstaller pillow
 
       - name: PyInstaller build
+        run: python -m PyInstaller --onefile __main__.py --name nbt-to-mcstrucutre
+
+      - name: Create Release Asset
         run: |
           built_path=nbt-to-mcstructure_v${{ github.event.release.tag_name }}_$RUNNER_OS_${{ matrix.cfg.architecture }}.zip
           echo "BUILT_PATH=$built_path" >> $GITHUB_ENV
-          python -m PyInstaller --onefile __main__.py --name nbt-to-mcstrucutre
           cp ./structures ./dist -r
           cp ./assets ./dist -r
           rm ./dist/assets/demo_video.gif
           rm ./dist/assets/vanilla_structures.zip
-
           cd dist
           if [ "$RUNNER_OS" == "Windows" ]; then
             7z a $built_path .
