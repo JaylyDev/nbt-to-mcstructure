@@ -244,6 +244,7 @@ def javaToBedrock(structure: NBTFile):
                     block_position_data[str(index)]["block_entity_data"][
                         "Items"
                     ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
+                    continue
                 case "minecraft:chest" | "minecraft:trapped_chest" | "minecraft:barrel":
                     if newPalette[entry]["name"].value == "minecraft:barrel":
                         block_position_data[str(index)] = createDefaultBlockEntity(
@@ -272,10 +273,36 @@ def javaToBedrock(structure: NBTFile):
                     block_position_data[str(index)]["block_entity_data"][
                         "OutputSignal"
                     ] = TAG_Int(block["nbt"]["OutputSignal"].value)
-                case "minecraft:furnace":
+                    continue
+                case "minecraft:flower_pot":
                     block_position_data[str(index)] = createDefaultBlockEntity(
-                        block, "Furnace"
+                        block, "FlowerPot"
                     )
+                    potted_plant = palette[block["state"].value]["Name"].value[17:]
+                    block_position_data[str(index)]["block_entity_data"][
+                        "PlantBlock"
+                    ] = TAG_Compound({"name": TAG_String(f"minecraft:{potted_plant}")})
+                    print(palette[block["state"].value]["Name"].value[17:])
+                    continue
+                case "minecraft:furnace" | "minecraft:blast_furnace" | "minecraft:smoker":
+                    match newPalette[entry]["name"].value:
+                        case "minecraft:furnace":
+                            block_position_data[str(index)] = createDefaultBlockEntity(
+                                block, "Furnace"
+                            )
+                            continue
+                        case "minecraft:blast_furnace":
+                            block_position_data[str(index)] = createDefaultBlockEntity(
+                                block, "BlastFurnace"
+                            )
+                            continue
+                        case "minecraft:smoker":
+                            block_position_data[str(index)] = createDefaultBlockEntity(
+                                block, "Smoker"
+                            )
+                            continue
+                        case _:
+                            continue
                     block_position_data[str(index)]["block_entity_data"][
                         "BurnTime"
                     ] = TAG_Short(block["nbt"]["BurnTime"].value)
