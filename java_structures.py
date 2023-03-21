@@ -13,6 +13,7 @@ from progress_bar import track
 
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
+old2new = json.loads(open("./assets/old2new.json", "r").read())
 data = {
     "blockstates": {
         "byte": [
@@ -218,7 +219,11 @@ def javaToBedrock(structure: NBTFile):
     startTime = time()
     for i in track(sequence=palette, description="[green]Applying Palette"):
         # Using prismarine-data, find the java edition ID
-        if not getDynamicBlockIdentifier(i) in blocksj2b:
+        if getDynamicBlockIdentifier(i) in old2new:
+            i['Name'] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
+            i.pop('Properties', None)
+        elif not getDynamicBlockIdentifier(i) in blocksj2b and not getDynamicBlockIdentifier(i) in old2new:
+            print(getDynamicBlockIdentifier(i))
             newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
         else:
             javaId = blocksj2b[getDynamicBlockIdentifier(i)]
@@ -238,9 +243,6 @@ def javaToBedrock(structure: NBTFile):
                     block_position_data[str(index)]["block_entity_data"][
                         "CookTime"
                     ] = TAG_Short(block["nbt"]["BrewTime"].value)
-                    block_position_data[str(index)]["block_entity_data"][
-                        "FuelAmount"
-                    ] = TAG_Short(block["nbt"]["Fuel"].value)
                     block_position_data[str(index)]["block_entity_data"][
                         "Items"
                     ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
