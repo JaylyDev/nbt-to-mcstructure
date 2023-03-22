@@ -220,10 +220,12 @@ def javaToBedrock(structure: NBTFile):
     for i in track(sequence=palette, description="[green]Applying Palette"):
         # Using prismarine-data, find the java edition ID
         if getDynamicBlockIdentifier(i) in old2new:
-            i['Name'] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
-            i.pop('Properties', None)
-        elif not getDynamicBlockIdentifier(i) in blocksj2b and not getDynamicBlockIdentifier(i) in old2new:
-            print(getDynamicBlockIdentifier(i))
+            i["Name"] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
+            i.pop("Properties", None)
+        elif (
+            not getDynamicBlockIdentifier(i) in blocksj2b
+            and not getDynamicBlockIdentifier(i) in old2new
+        ):
             newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
         else:
             javaId = blocksj2b[getDynamicBlockIdentifier(i)]
@@ -236,16 +238,26 @@ def javaToBedrock(structure: NBTFile):
         if entry != -1:
             block = checkEntry(blocks, entry)
             match newPalette[entry]["name"].value:
+                case "minecraft:bed":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Bed"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {"color": TAG_Byte(bedsj2b[palette[entry]["Name"].value])}
+                    )
+                    continue
                 case "minecraft:brewing_stand":
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "BrewingStand"
                     )
-                    block_position_data[str(index)]["block_entity_data"][
-                        "CookTime"
-                    ] = TAG_Short(block["nbt"]["BrewTime"].value)
-                    block_position_data[str(index)]["block_entity_data"][
-                        "Items"
-                    ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "CookTime": TAG_Short(block["nbt"]["BrewTime"].value),
+                            "Items": TAG_List(
+                                TAG_Compound, getItems(block["nbt"]["Items"])
+                            ),
+                        }
+                    )
                     continue
                 case "minecraft:chest" | "minecraft:trapped_chest" | "minecraft:barrel":
                     if newPalette[entry]["name"].value == "minecraft:barrel":
@@ -258,73 +270,69 @@ def javaToBedrock(structure: NBTFile):
                         )
 
                     if "LootTable" in block["nbt"]:
-                        block_position_data[str(index)]["block_entity_data"][
-                            "LootTable"
-                        ] = TAG_String(
-                            f"loot_tables/{block['nbt']['LootTable'].value[10:]}.json"
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "LootTable": TAG_String(
+                                    f"loot_tables/{block['nbt']['LootTable'].value[10:]}.json"
+                                )
+                            }
                         )
                     else:
-                        block_position_data[str(index)]["block_entity_data"][
-                            "Items"
-                        ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "Items": TAG_List(
+                                    TAG_Compound, getItems(block["nbt"]["Items"])
+                                )
+                            }
+                        )
                     continue
                 case "minecraft:comparator":
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Comparator"
                     )
-                    block_position_data[str(index)]["block_entity_data"][
-                        "OutputSignal"
-                    ] = TAG_Int(block["nbt"]["OutputSignal"].value)
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {"OutputSignal": TAG_Int(block["nbt"]["OutputSignal"].value)}
+                    )
                     continue
                 case "minecraft:flower_pot":
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "FlowerPot"
                     )
                     potted_plant = palette[block["state"].value]["Name"].value[17:]
-                    block_position_data[str(index)]["block_entity_data"][
-                        "PlantBlock"
-                    ] = TAG_Compound({"name": TAG_String(f"minecraft:{potted_plant}")})
-                    print(palette[block["state"].value]["Name"].value[17:])
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "PlantBlock": TAG_Compound(
+                                {"name": TAG_String(f"minecraft:{potted_plant}")}
+                            )
+                        }
+                    )
                     continue
                 case "minecraft:furnace" | "minecraft:blast_furnace" | "minecraft:smoker":
-                    match newPalette[entry]["name"].value:
-                        case "minecraft:furnace":
-                            block_position_data[str(index)] = createDefaultBlockEntity(
-                                block, "Furnace"
-                            )
-                            continue
-                        case "minecraft:blast_furnace":
-                            block_position_data[str(index)] = createDefaultBlockEntity(
-                                block, "BlastFurnace"
-                            )
-                            continue
-                        case "minecraft:smoker":
-                            block_position_data[str(index)] = createDefaultBlockEntity(
-                                block, "Smoker"
-                            )
-                            continue
-                        case _:
-                            continue
-                    block_position_data[str(index)]["block_entity_data"][
-                        "BurnTime"
-                    ] = TAG_Short(block["nbt"]["BurnTime"].value)
-                    block_position_data[str(index)]["block_entity_data"][
-                        "CookTime"
-                    ] = TAG_Short(block["nbt"]["CookTime"].value)
-                    block_position_data[str(index)]["block_entity_data"][
-                        "BurnDuration"
-                    ] = TAG_Short(block["nbt"]["CookTimeTotal"].value)
-                    block_position_data[str(index)]["block_entity_data"][
-                        "Items"
-                    ] = TAG_List(TAG_Compound, getItems(block["nbt"]["Items"]))
-                    continue
-                case "minecraft:bed":
-                    block_position_data[str(index)] = createDefaultBlockEntity(
-                        block, "Bed"
+                    if newPalette[entry]["name"].value == "minecraft:furnace":
+                        block_position_data[str(index)] = createDefaultBlockEntity(
+                            block, "Furnace"
+                        )
+                    elif newPalette[entry]["name"].value == "minecraft:blast_furnace":
+                        block_position_data[str(index)] = createDefaultBlockEntity(
+                            block, "BlastFurnace"
+                        )
+                    else:
+                        block_position_data[str(index)] = createDefaultBlockEntity(
+                            block, "Smoker"
+                        )
+
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "BurnTime": TAG_Short(block["nbt"]["BurnTime"].value),
+                            "CookTime": TAG_Short(block["nbt"]["CookTime"].value),
+                            "BurnDuration": TAG_Short(
+                                block["nbt"]["CookTimeTotal"].value
+                            ),
+                            "Items": TAG_List(
+                                TAG_Compound, getItems(block["nbt"]["Items"])
+                            ),
+                        }
                     )
-                    block_position_data[str(index)]["block_entity_data"][
-                        "color"
-                    ] = TAG_Byte(bedsj2b[palette[entry]["Name"].value])
                     continue
                 case _:
                     continue
