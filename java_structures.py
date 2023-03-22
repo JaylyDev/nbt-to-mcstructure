@@ -405,6 +405,23 @@ def javaToBedrock(structure: NBTFile):
                         }
                     )
                     continue
+                case "minecraft:structure_block":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "StructureBlock"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "isPowered": TAG_Byte(block["nbt"]["Powered"].value),
+                            "structureName": TAG_String(block["nbt"]["name"].value),
+                            "xStructureOffset": TAG_String(block["nbt"]["posX"].value),
+                            "yStructureOffset": TAG_String(block["nbt"]["posY"].value),
+                            "zStructureOffset": TAG_String(block["nbt"]["posZ"].value),
+                            "xStructureSize": TAG_String(block["nbt"]["sizeX"].value),
+                            "yStructureSize": TAG_String(block["nbt"]["sizeY"].value),
+                            "zStructureSize": TAG_String(block["nbt"]["sizeZ"].value),
+                        }
+                    )
+                    continue
                 case _:
                     continue
 
