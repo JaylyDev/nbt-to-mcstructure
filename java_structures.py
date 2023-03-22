@@ -345,13 +345,46 @@ def javaToBedrock(structure: NBTFile):
                         {
                             "name": TAG_String(block["nbt"]["name"].value),
                             "target": TAG_String(block["nbt"]["target"].value),
-                            "target_pool": TAG_String(
-                                block["nbt"]["target_pool"].value
-                            ),
                             "final_state": TAG_String(
                                 block["nbt"]["final_state"].value
                             ),
                             "joint": TAG_String(block["nbt"]["joint"].value),
+                        }
+                    )
+
+                    if "target_pool" in block["nbt"]:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "target_pool": TAG_String(
+                                    block["nbt"]["target_pool"].value
+                                ),
+                            }
+                        )
+                    continue
+                case "minecraft:mob_spawner":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "MobSpawner"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "EntityIdentifier": TAG_String(
+                                block["nbt"]["SpawnData"]["id"].value
+                            ),
+                            "Delay": TAG_Short(block["nbt"]["Delay"].value),
+                            "MinSpawnDelay": TAG_Short(
+                                block["nbt"]["MinSpawnDelay"].value
+                            ),
+                            "MaxSpawnDelay": TAG_Short(
+                                block["nbt"]["MaxSpawnDelay"].value
+                            ),
+                            "SpawnCount": TAG_Short(block["nbt"]["SpawnCount"].value),
+                            "MaxNearbyEntities": TAG_Short(
+                                block["nbt"]["MaxNearbyEntities"].value
+                            ),
+                            "RequiredPlayerRange": TAG_Short(
+                                block["nbt"]["RequiredPlayerRange"].value
+                            ),
+                            "SpawnRange": TAG_Short(block["nbt"]["SpawnRange"].value),
                         }
                     )
                     continue
