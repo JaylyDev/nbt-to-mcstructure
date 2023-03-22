@@ -411,14 +411,13 @@ def javaToBedrock(structure: NBTFile):
                     )
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
-                            "isPowered": TAG_Byte(block["nbt"]["Powered"].value),
                             "structureName": TAG_String(block["nbt"]["name"].value),
-                            "xStructureOffset": TAG_String(block["nbt"]["posX"].value),
-                            "yStructureOffset": TAG_String(block["nbt"]["posY"].value),
-                            "zStructureOffset": TAG_String(block["nbt"]["posZ"].value),
-                            "xStructureSize": TAG_String(block["nbt"]["sizeX"].value),
-                            "yStructureSize": TAG_String(block["nbt"]["sizeY"].value),
-                            "zStructureSize": TAG_String(block["nbt"]["sizeZ"].value),
+                            "xStructureOffset": TAG_Int(block["nbt"]["posX"].value),
+                            "yStructureOffset": TAG_Int(block["nbt"]["posY"].value),
+                            "zStructureOffset": TAG_Int(block["nbt"]["posZ"].value),
+                            "xStructureSize": TAG_Int(block["nbt"]["sizeX"].value),
+                            "yStructureSize": TAG_Int(block["nbt"]["sizeY"].value),
+                            "zStructureSize": TAG_Int(block["nbt"]["sizeZ"].value),
                         }
                     )
                     continue
