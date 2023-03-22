@@ -334,6 +334,24 @@ def javaToBedrock(structure: NBTFile):
                         }
                     )
                     continue
+                case "minecraft:jigsaw":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "JigsawBlock"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "name": TAG_String(block["nbt"]["name"].value),
+                            "target": TAG_String(block["nbt"]["target"].value),
+                            "target_pool": TAG_String(
+                                block["nbt"]["target_pool"].value
+                            ),
+                            "final_state": TAG_String(
+                                block["nbt"]["final_state"].value
+                            ),
+                            "joint": TAG_String(block["nbt"]["joint"].value),
+                        }
+                    )
+                    continue
                 case _:
                     continue
 
