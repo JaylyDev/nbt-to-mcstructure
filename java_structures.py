@@ -81,7 +81,6 @@ def createDefaultBlockEntity(block, id):
         {
             "block_entity_data": TAG_Compound(
                 {
-                    "Findable": TAG_Byte(0),
                     "id": TAG_String(id),
                     "isMovable": TAG_Byte(1),
                     "x": block["pos"][0],
@@ -268,6 +267,10 @@ def javaToBedrock(structure: NBTFile):
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Chest"
                         )
+
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {"Findable": TAG_Byte(0)}
+                    )
 
                     if "LootTable" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"].update(
