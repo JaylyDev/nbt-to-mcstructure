@@ -14,7 +14,7 @@ from progress_bar import track
 
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
-skullj2b = json.loads(open("./assets/skullj2b.json", "r").read())
+skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
 old2new = json.loads(open("./assets/old2new.json", "r").read())
 data = {
     "blockstates": {
