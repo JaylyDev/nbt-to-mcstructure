@@ -8,11 +8,13 @@ from pynbt import (
     TAG_String,
     TAG_Byte,
     TAG_Short,
+    TAG_Float,
 )
 from progress_bar import track
 
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
+skullj2b = json.loads(open("./assets/skullj2b.json", "r").read())
 old2new = json.loads(open("./assets/old2new.json", "r").read())
 data = {
     "blockstates": {
@@ -385,6 +387,21 @@ def javaToBedrock(structure: NBTFile):
                                 block["nbt"]["RequiredPlayerRange"].value
                             ),
                             "SpawnRange": TAG_Short(block["nbt"]["SpawnRange"].value),
+                        }
+                    )
+                    continue
+                case "minecraft:skull":
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Skull"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "rotation": TAG_Float(
+                                float(palette[entry]["Properties"]["rotation"].value)
+                            ),
+                            "SkullType": TAG_Byte(
+                                skullj2b[palette[entry]["Name"].value]
+                            ),
                         }
                     )
                     continue
