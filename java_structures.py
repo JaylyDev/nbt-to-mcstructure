@@ -223,7 +223,8 @@ def javaToBedrock(structure: NBTFile):
         if getDynamicBlockIdentifier(i) in old2new:
             i["Name"] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
             i.pop("Properties", None)
-        elif (
+
+        if (
             not getDynamicBlockIdentifier(i) in blocksj2b
             and not getDynamicBlockIdentifier(i) in old2new
         ):
