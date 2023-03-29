@@ -4,10 +4,12 @@ import gzip
 import pynbt
 from time import time
 from java_structures import javaToBedrock
-from os import listdir
+from os import listdir, makedirs, mkdir
 from os.path import isfile, join, isdir
 import threading
 
+structurePath = 'structures' ## path of structures
+  
 def convert(file):
   mcstructureFile = file.replace(pathlib.Path(file).suffix, '') + '.mcstructure'
   print(f"Converting '{file}' to '{mcstructureFile}'")
@@ -71,7 +73,7 @@ def get_nbtFiles (dirpath: str) -> list[str]:
   return files
 
 if __name__ == "__main__":  # pragma: no coverage
-  structurePath = 'structures' ## path of structures
+  makedirs(structurePath, exist_ok=True)
   nbtFiles = get_nbtFiles(structurePath)
 
   if len(nbtFiles) == 0:
