@@ -113,7 +113,7 @@ def getItems(items: list[TAG_Compound]):
 
                     # assign it
                     itemData["Block"] = TAG_Compound(blockobject)
-                    itemData["Name"] = blockobject["name"]
+                    itemData["Name"] = TAG_String(blockobject["name"].value)
 
         itemsList.append(itemData)
 
