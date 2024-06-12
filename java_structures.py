@@ -15,44 +15,8 @@ from progress_bar import track
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
 skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
-data = {
-    "blockstates": {
-        "byte": [
-            "output_subtract_bit",
-            "upside_down_bit",
-            "wall_post_bit",
-            "top_slot_bit",
-            "hanging",
-            "open_bit",
-            "lit",
-            "powered_bit",
-            "output_lit_bit",
-            "in_wall_bit",
-            "button_pressed_bit",
-            "door_hinge_bit",
-            "upper_block_bit",
-            "update_bit",
-        ],
-        "int": [
-            "weirdo_direction",
-            "facing_direction",
-            "direction",
-            "repeater_delay",
-            "redstone_signal",
-            "candles",
-            "age",
-            "rotation",
-            "deprecated",
-            "vine_direction_bits",
-            "liquid_depth",
-            "composter_fill_level",
-            "growth",
-            "moisturized_amount",
-        ],
-    }
-}
-MC_VERSION = "1.19.70.02"
-
+blockstates = json.loads(open("./assets/blockstates.json", "r").read())
+MC_VERSION = "1.20.80.03"
 
 def checkEntry(blocks, entry):
     for block in blocks:
@@ -93,13 +57,13 @@ def createDefaultBlockEntity(block, id):
     )
 
 
-def getVersion(versionString: str) -> int:
-    def getHex(n):
-        output = hex(int(n))[2:]
-        if len(output) < 2:
-            output = "0" + output
-        return output
+def getHex(n):
+    output = hex(int(n))[2:]
+    if len(output) < 2:
+        output = "0" + output
+    return output
 
+def getVersion(versionString: str) -> int:
     version = versionString.split(".")
     return eval(f"0x{''.join(map(getHex, version))}")
 
@@ -171,15 +135,13 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
         for statename in stateslist:
             # Find bedrock edition state type
             statevalue = stateslist[statename]
-            if data["blockstates"]["byte"].count(statename):
-                if statevalue == "true":
-                    object["states"].value[statename] = TAG_Byte(1)
-                else:
-                    object["states"].value[statename] = TAG_Byte(0)
-            elif data["blockstates"]["int"].count(statename):
-                object["states"].value[statename] = TAG_Int(int(statevalue))
-            else:
-                object["states"].value[statename] = TAG_String(statevalue)
+            if statename in blockstates:
+                if statevalue == "byte":
+                    object["states"].value[statename] = TAG_Byte(bool(statevalue))
+                elif statevalue == "int":
+                    object["states"].value[statename] = TAG_Int(int(statevalue))
+                else: # Assume string
+                    object["states"].value[statename] = TAG_String(statevalue)
 
         return object
 
