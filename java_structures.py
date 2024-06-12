@@ -15,7 +15,6 @@ from progress_bar import track
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
 skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
-old2new = json.loads(open("./assets/old2new.json", "r").read())
 data = {
     "blockstates": {
         "byte": [
@@ -220,14 +219,7 @@ def javaToBedrock(structure: NBTFile):
     startTime = time()
     for i in track(sequence=palette, description="[green]Applying Palette"):
         # Using prismarine-data, find the java edition ID
-        if getDynamicBlockIdentifier(i) in old2new:
-            i["Name"] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
-            i.pop("Properties", None)
-
-        if (
-            not getDynamicBlockIdentifier(i) in blocksj2b
-            and not getDynamicBlockIdentifier(i) in old2new
-        ):
+        if not getDynamicBlockIdentifier(i) in blocksj2b:
             newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
         else:
             javaId = blocksj2b[getDynamicBlockIdentifier(i)]
