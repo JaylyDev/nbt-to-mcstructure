@@ -12,52 +12,11 @@ from pynbt import (
 )
 from progress_bar import track
 
-blocksj2b: dict = json.loads(open("./assets/blocksJ2B.json", "r").read())
-bedsj2b: dict = json.loads(open("./assets/bedsJ2B.json", "r").read())
-skullj2b: dict = json.loads(open("./assets/skullJ2B.json", "r").read())
-old2new: dict = json.loads(open("./assets/old2new.json", "r").read())
-data = {
-    "blockstates": {
-        "byte": [
-            "output_subtract_bit",
-            "upside_down_bit",
-            "wall_post_bit",
-            "top_slot_bit",
-            "hanging",
-            "open_bit",
-            "lit",
-            "powered_bit",
-            "output_lit_bit",
-            "in_wall_bit",
-            "button_pressed_bit",
-            "door_hinge_bit",
-            "upper_block_bit",
-            "update_bit",
-        ],
-        "int": [
-            "weirdo_direction",
-            "facing_direction",
-            "direction",
-            "repeater_delay",
-            "redstone_signal",
-            "candles",
-            "age",
-            "rotation",
-            "deprecated",
-            "vine_direction_bits",
-            "liquid_depth",
-            "composter_fill_level",
-            "growth",
-            "moisturized_amount",
-        ],
-    }
-}
-MC_VERSION = "1.19.70.02"
-
-def getIdFromDynamicBlockId (dynamicId: str) -> str:
-    return re.findall(r'[a-z]+:[a-z_]+', dynamicId)[0]
-
-javaBlocks = dict.fromkeys(map(getIdFromDynamicBlockId, blocksj2b.keys()))
+blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
+bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
+skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
+blockstates = json.loads(open("./assets/blockstates.json", "r").read())
+MC_VERSION = "1.20.80.03"
 
 def checkEntry(blocks, entry):
     for block in blocks:
@@ -136,13 +95,13 @@ def createDefaultBlockEntity(block, id):
     )
 
 
-def getVersion(versionString: str) -> int:
-    def getHex(n):
-        output = hex(int(n))[2:]
-        if len(output) < 2:
-            output = "0" + output
-        return output
+def getHex(n):
+    output = hex(int(n))[2:]
+    if len(output) < 2:
+        output = "0" + output
+    return output
 
+def getVersion(versionString: str) -> int:
     version = versionString.split(".")
     return eval(f"0x{''.join(map(getHex, version))}")
 
@@ -214,18 +173,16 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
         for statename in stateslist:
             # Find bedrock edition state type
             statevalue = stateslist[statename]
-            if data["blockstates"]["byte"].count(statename):
-                if statevalue == "true":
-                    object["states"].value[statename] = TAG_Byte(1)
-                else:
-                    object["states"].value[statename] = TAG_Byte(0)
-            elif data["blockstates"]["int"].count(statename):
+            statetype = blockstates[statename]['type']
+            if statetype == "byte" and statevalue == "true":
+                object["states"].value[statename] = TAG_Byte(1)
+            elif statetype == "byte" and statevalue == "false":
+                object["states"].value[statename] = TAG_Byte(0)
+            elif statetype == "int":
                 object["states"].value[statename] = TAG_Int(int(statevalue))
-            else:
+            elif statetype == "string":
                 object["states"].value[statename] = TAG_String(statevalue)
-
         return object
-
 
 def javaToBedrock(structure: NBTFile):
     blocks: TAG_List = structure["blocks"].value
@@ -254,32 +211,35 @@ def javaToBedrock(structure: NBTFile):
 
     # applying blocks
     startTime = time()
+    applyWaterloggedBlock = False
     for block in track(sequence=blocks, description="[green]Applying Blocks"):
         pos = block["pos"].value
 
         index = getStructureBlockIndex(
             oldsize[1].value, oldsize[2].value, pos[0].value, pos[1].value, pos[2].value
         )
-        newBlocks[index] = block["state"].value
-        # newBlocks2[index] = -1 represent air
+        newBlocks[index] = block["state"].value        
+        blockobject = palette[block["state"].value]
+
+        # Apply waterlogged block operation (waterlogged block is appended to pallete list last)
+        if "Properties" in blockobject and "waterlogged" in blockobject["Properties"] and blockobject["Properties"]["waterlogged"].value == "true":
+            newBlocks2[index] = len(palette)
+            applyWaterloggedBlock = True
+
     print(f"Finished applying blocks in {round((time() - startTime) * 1000, 2)} ms")
 
     # applying palette
     startTime = time()
     for i in track(sequence=palette, description="[green]Applying Palette"):
         # Using prismarine-data, find the java edition ID
-        if getDynamicBlockIdentifier(i) in old2new:
-            i["Name"] = TAG_String(old2new[getDynamicBlockIdentifier(i)])
-            i.pop("Properties", None)
-
-        if (
-            not getDynamicBlockIdentifier(i) in blocksj2b
-            and not getDynamicBlockIdentifier(i) in old2new
-        ):
+        blockId = getDynamicBlockIdentifier(i)
+        if not blockId in blocksj2b:
             newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
         else:
-            javaId = blocksj2b[getDynamicBlockIdentifier(i)]
+            javaId = blocksj2b[blockId]
             newPalette.append(getBlockObject(javaId, "bedrock"))
+    if applyWaterloggedBlock:
+        newPalette.append(getBlockObject("minecraft:water[liquid_depth=0]", "bedrock"))
     print(f"Finished applying palette in {round((time() - startTime) * 1000, 2)} ms")
 
     block_position_data = {}
