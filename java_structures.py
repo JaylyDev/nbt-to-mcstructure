@@ -12,10 +12,14 @@ from pynbt import (
 )
 from progress_bar import track
 
+def getIdFromDynamicBlockId (dynamicId: str) -> str:
+    return re.findall(r'[a-z]+:[a-z_]+', dynamicId)[0]
+
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
 skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
 blockstates = json.loads(open("./assets/blockstates.json", "r").read())
+javaBlocks = dict.fromkeys(map(getIdFromDynamicBlockId, blocksj2b.keys()))
 MC_VERSION = "1.21.0.03"
 
 def checkEntry(blocks, entry):
