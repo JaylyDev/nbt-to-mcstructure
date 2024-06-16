@@ -12,31 +12,73 @@ from pynbt import (
 )
 from progress_bar import track
 
+def getIdFromDynamicBlockId (dynamicId: str) -> str:
+    return re.findall(r'[a-z]+:[a-z_]+', dynamicId)[0]
+
 blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
 skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
 blockstates = json.loads(open("./assets/blockstates.json", "r").read())
-MC_VERSION = "1.20.80.03"
+javaBlocks = dict.fromkeys(map(getIdFromDynamicBlockId, blocksj2b.keys()))
+MC_VERSION = "1.21.0.03"
 
 def checkEntry(blocks, entry):
     for block in blocks:
         if block["state"].value == entry:
             return block
 
-
-def getItems(items):
+# TODO https://github.com/JaylyDev/nbt-to-mcstructure/issues/8
+def getItems(items: list[TAG_Compound]):
     itemsList = []
 
-    for index in range(len(items)):
-        itemsList.append(
-            {
-                "Count": TAG_Byte(items[index].get("Count").value),
-                "Damage": TAG_Short(0),
-                "Name": TAG_String(items[index].get("id").value),
-                "Slot": TAG_Byte(items[index].get("Slot").value),
-                "WasPickedUp": TAG_Byte(0),
-            }
-        )
+    for item in items:
+        id = item.get("id").value
+        tag = item.get("tag").value if item.get("tag") else {}
+
+        itemData = {
+            "Block": TAG_Compound(None),
+            "Count": TAG_Byte(item.get("Count").value),
+            "Damage": TAG_Short(tag["Damage"].value if "Damage" in tag else 0),
+            "Name": TAG_String(id),
+            "Slot": TAG_Byte(item.get("Slot").value),
+            "WasPickedUp": TAG_Byte(0),
+        }
+
+        # check if item is a block via blocksj2b, apply Block key with block states if true
+        if id in javaBlocks:
+            if "tag" in item: ## item has nbt
+                stateslist = {
+                    # {name: 'direction', value: '0'}
+                }
+                for statename in tag.value:
+                    state = tag.value[statename]
+                    stateslist[statename] = state.value
+                # Create dynamic properties list
+                properties = []
+                for statename in sorted(stateslist):
+                    properties.append(statename + "=" + stateslist[statename])
+
+                dynamicblockid = id + "[" + ",".join(properties) + "]"
+                itemData["Block"] = TAG_Compound(getBlockObject(dynamicblockid))
+            else:
+                result = [x for x in blocksj2b if x.startswith(id)]
+                if len(result) > 0:
+                    blockobject = getBlockObject(blocksj2b[result[0]], "bedrock")
+
+                    # convert boolean to short because structures are weird
+                    states = blockobject["states"]
+                    for state in states:
+                        value = states[state].value
+                        if value == "true":
+                            states[state] = TAG_Byte(1)
+                        elif value == "false":
+                            states[state] = TAG_Byte(0)
+
+                    # assign it
+                    itemData["Block"] = TAG_Compound(blockobject)
+                    itemData["Name"] = TAG_String(blockobject["name"].value)
+
+        itemsList.append(itemData)
 
     return itemsList
 
@@ -135,26 +177,32 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
         for statename in stateslist:
             # Find bedrock edition state type
             statevalue = stateslist[statename]
-            if statename in blockstates:
-                if statevalue == "byte":
-                    object["states"].value[statename] = TAG_Byte(bool(statevalue))
-                elif statevalue == "int":
-                    object["states"].value[statename] = TAG_Int(int(statevalue))
-                else: # Assume string
-                    object["states"].value[statename] = TAG_String(statevalue)
-
+            statetype = blockstates[statename]['type']
+            if statetype == "byte" and statevalue == "true":
+                object["states"].value[statename] = TAG_Byte(1)
+            elif statetype == "byte" and statevalue == "false":
+                object["states"].value[statename] = TAG_Byte(0)
+            elif statetype == "int":
+                object["states"].value[statename] = TAG_Int(int(statevalue))
+            elif statetype == "string":
+                object["states"].value[statename] = TAG_String(statevalue)
         return object
-
 
 def javaToBedrock(structure: NBTFile):
     blocks: TAG_List = structure["blocks"].value
     palette: TAG_List = structure["palette"].value
     oldsize: TAG_List = structure["size"].value
-    size: int = oldsize[0].value * oldsize[1].value * oldsize[2].value
+    sizeX = oldsize[0].value
+    sizeY = oldsize[1].value
+    sizeZ = oldsize[2].value
+    size: int = sizeX * sizeY * sizeZ
 
     newBlocks = []
     newBlocks2 = []
     newPalette = []
+
+    # warns user if block height is bigger than 384 blocks
+    if sizeY > 384: print(f"[Warning] This structure's height is over than vanilla's height limit of 384 blocks.")
 
     # new blocks
     startTime = time()
@@ -167,25 +215,35 @@ def javaToBedrock(structure: NBTFile):
 
     # applying blocks
     startTime = time()
+    applyWaterloggedBlock = False
     for block in track(sequence=blocks, description="[green]Applying Blocks"):
         pos = block["pos"].value
 
         index = getStructureBlockIndex(
             oldsize[1].value, oldsize[2].value, pos[0].value, pos[1].value, pos[2].value
         )
-        newBlocks[index] = block["state"].value
-        # newBlocks2[index] = -1 represent air
+        newBlocks[index] = block["state"].value        
+        blockobject = palette[block["state"].value]
+
+        # Apply waterlogged block operation (waterlogged block is appended to pallete list last)
+        if "Properties" in blockobject and "waterlogged" in blockobject["Properties"] and blockobject["Properties"]["waterlogged"].value == "true":
+            newBlocks2[index] = len(palette)
+            applyWaterloggedBlock = True
+
     print(f"Finished applying blocks in {round((time() - startTime) * 1000, 2)} ms")
 
     # applying palette
     startTime = time()
     for i in track(sequence=palette, description="[green]Applying Palette"):
         # Using prismarine-data, find the java edition ID
-        if not getDynamicBlockIdentifier(i) in blocksj2b:
+        blockId = getDynamicBlockIdentifier(i)
+        if not blockId in blocksj2b:
             newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
         else:
-            javaId = blocksj2b[getDynamicBlockIdentifier(i)]
+            javaId = blocksj2b[blockId]
             newPalette.append(getBlockObject(javaId, "bedrock"))
+    if applyWaterloggedBlock:
+        newPalette.append(getBlockObject("minecraft:water[liquid_depth=0]", "bedrock"))
     print(f"Finished applying palette in {round((time() - startTime) * 1000, 2)} ms")
 
     block_position_data = {}
