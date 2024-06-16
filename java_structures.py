@@ -16,7 +16,7 @@ blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
 bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
 skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
 blockstates = json.loads(open("./assets/blockstates.json", "r").read())
-MC_VERSION = "1.20.80.03"
+MC_VERSION = "1.21.0.03"
 
 def checkEntry(blocks, entry):
     for block in blocks:
