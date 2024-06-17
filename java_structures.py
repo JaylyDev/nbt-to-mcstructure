@@ -142,7 +142,7 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
                 object["states"].value[statename] = TAG_Byte(1)
             elif statetype == "bool" and statevalue == "false":
                 object["states"].value[statename] = TAG_Byte(0)
-            elif statetype == "int" and statevalue in validValues:
+            elif statetype == "int" and int(statevalue) in validValues:
                 object["states"].value[statename] = TAG_Int(int(statevalue))
             elif statetype == "string" and statevalue in validValues:
                 object["states"].value[statename] = TAG_String(statevalue)
