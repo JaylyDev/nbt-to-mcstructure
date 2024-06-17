@@ -135,15 +135,19 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
         for statename in stateslist:
             # Find bedrock edition state type
             statevalue = stateslist[statename]
-            statetype = blockstates[statename]['type']
-            if statetype == "byte" and statevalue == "true":
+            statetype = blockstates[statename]["type"]
+            validValues = blockstates[statename]["values"]
+
+            if statetype == "bool" and statevalue == "true":
                 object["states"].value[statename] = TAG_Byte(1)
-            elif statetype == "byte" and statevalue == "false":
+            elif statetype == "bool" and statevalue == "false":
                 object["states"].value[statename] = TAG_Byte(0)
-            elif statetype == "int":
+            elif statetype == "int" and statevalue in validValues:
                 object["states"].value[statename] = TAG_Int(int(statevalue))
-            elif statetype == "string":
+            elif statetype == "string" and statevalue in validValues:
                 object["states"].value[statename] = TAG_String(statevalue)
+            else:
+                print(f"Warning: State name {statename} with value {statevalue} is not a valid state for {baseidentifier}. Valid values: {validValues}.")
         return object
 
 def javaToBedrock(structure: NBTFile):
