@@ -61,3 +61,6 @@ When installed, it will generate a `settings.json` file in `data/nbt-to-mcstruct
     ]
 }
 ```
+## Contributing
+We're looking for contributors to keep this converter as up-to-date as possible. Reach out to JaylyDev in regards to the regular program and to ThijsHankelMC in regards to the Regolith Filter.
+Discord IDs: jaylymc && thijsmc
