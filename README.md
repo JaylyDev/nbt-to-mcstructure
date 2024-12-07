@@ -35,7 +35,6 @@ regolith install github.com/JaylyDev/nbt-to-mcstructure/nbt-to-mcstructure==rego
 ```
 
 Add this to your Regolith filter definitions to enable the filter.
-
 ```jsonc
 "nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "regolith-filter"}
 ```
