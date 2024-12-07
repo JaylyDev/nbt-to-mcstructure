@@ -32,7 +32,7 @@ The filter allows you to place your `.nbt` structure files straight into the `pa
 Add this to your Regolith filter definitions to enable the filter.
 
 ```jsonc
-"nbt_to_mcstructure": {"url": "https://github.com/JaylyDev/nbt-to-mcstructure/tree/regolith-filter", "version": "HEAD"}
+"nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure/tree/regolith-filter", "version": "HEAD"}
 ```
 
 When installed, it will generate a `settings.json` file in `data/nbt_to_mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
