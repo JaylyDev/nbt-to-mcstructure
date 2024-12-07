@@ -1,4 +1,5 @@
 from time import time
+import os
 import json, re
 from pynbt import (
     NBTFile,
@@ -12,10 +13,26 @@ from pynbt import (
 )
 from progress_bar import track
 
-blocksj2b = json.loads(open("./assets/blocksJ2B.json", "r").read())
-bedsj2b = json.loads(open("./assets/bedsJ2B.json", "r").read())
-skullj2b = json.loads(open("./assets/skullJ2B.json", "r").read())
-blockstates = json.loads(open("./assets/blockstates.json", "r").read())
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct full paths to your files
+blocksj2b_path = os.path.join(script_dir, "blocksJ2B.json")
+bedsj2b_path = os.path.join(script_dir, "bedsJ2B.json")
+skullj2b_path = os.path.join(script_dir, "skullJ2B.json")
+blockstates_path = os.path.join(script_dir, "blockstates.json")
+
+# Load JSON files
+with open(blocksj2b_path, "r") as f:
+    blocksj2b = json.load(f)
+
+with open(bedsj2b_path, "r") as f:
+    bedsj2b = json.load(f)
+
+with open(skullj2b_path, "r") as f:
+    skullj2b = json.load(f)
+
+with open(blockstates_path, "r") as f:
+    blockstates = json.load(f)
 MC_VERSION = "1.21.0.03"
 
 def checkEntry(blocks, entry):
@@ -106,8 +123,8 @@ def getDynamicBlockIdentifier(blockobject):
 
 def getBlockObject(dynamicblockid: str, format="bedrock"):
     baseidentifier = dynamicblockid.split("[")[0]
-    properties = dynamicblockid.split("[")[1].replace("]", "")
-    if properties.split(",")[0] != "":
+    properties = dynamicblockid.split("[")[1].replace("]", "") if "[" in dynamicblockid else ""
+    if properties:
         properties = properties.split(",")
     else:
         properties = []
@@ -150,7 +167,7 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
                 print(f"Warning: State name {statename} with value {statevalue} is not a valid state for {baseidentifier}. Valid values: {validValues}.")
         return object
 
-def javaToBedrock(structure: NBTFile):
+def javaToBedrock(structure: NBTFile, structure_id: str, custom_mapping: dict):
     blocks: TAG_List = structure["blocks"].value
     palette: TAG_List = structure["palette"].value
     oldsize: TAG_List = structure["size"].value
@@ -191,13 +208,25 @@ def javaToBedrock(structure: NBTFile):
     # applying palette
     startTime = time()
     for i in track(sequence=palette, description="[green]Applying Palette"):
-        # Using prismarine-data, find the java edition ID
         blockId = getDynamicBlockIdentifier(i)
-        if not blockId in blocksj2b:
-            newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
-        else:
+        baseBlockId = blockId.split("[")[0]  # Get the base block identifier
+
+        # Check for exact match in custom mapping (with brackets)
+        if blockId in custom_mapping:
+            mapped_id = custom_mapping[blockId]
+            newPalette.append(getBlockObject(mapped_id, "bedrock"))
+        # Check for base identifier match in custom mapping (ignore brackets)
+        elif baseBlockId in custom_mapping:
+            mapped_id = custom_mapping[baseBlockId]
+            newPalette.append(getBlockObject(mapped_id, "bedrock"))
+        # Fallback to default mapping
+        elif blockId in blocksj2b:
             javaId = blocksj2b[blockId]
             newPalette.append(getBlockObject(javaId, "bedrock"))
+        # Fallback to air if no mapping found
+        else:
+            newPalette.append(getBlockObject("minecraft:air[]", "bedrock"))
+
     if applyWaterloggedBlock:
         newPalette.append(getBlockObject("minecraft:water[liquid_depth=0]", "bedrock"))
     print(f"Finished applying palette in {round((time() - startTime) * 1000, 2)} ms")

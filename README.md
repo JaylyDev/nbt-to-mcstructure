@@ -23,3 +23,36 @@ The reason this program is built in Python is because:
 3. Run `__main__.py`, the program converts all java structures in the `structures` folder to the bedrock structure format, and they should be generated in `structures` folder.
 
 ⚠️**Make sure your computer has enough memory and spaces on disk to convert large NBT files!**
+
+## Regolith Filter
+
+This converter is available as a [Regolith](https://github.com/Bedrock-OSS/regolith) filter as well.
+The filter allows you to place your `.nbt` structure files straight into the `packs/BP/structures` folder which will be compiled into the `.mcstructure` format. The original `.nbt` will be removed in the compiled version.
+
+Add this to your Regolith filter definitions to enable the filter.
+
+```jsonc
+"nbt_to_mcstructure": {"url": "https://github.com/JaylyDev/nbt-to-mcstructure/tree/regolith-filter", "version": "HEAD"}
+```
+
+When installed, it will generate a `settings.json` file in `data/nbt_to_mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
+```jsonc
+{
+    "block_mapping": [
+        {
+            "structure_id": "add_your_structure_id_here", // This is the exact same name as your filename excluding the file suffix.
+            "mapping": {
+                "minecraft:dirt": "namespace:custom_dirt",
+                "minecraft:stone": "namespace:custom_stone"
+            }
+        },
+        {
+            "structure_id": "add_another_structure_id_here",
+            "mapping": {
+                "minecraft:diamond_block": "namespace:custom_diamond_block",
+                "minecraft:iron_ore": "namespace:custom_iron_ore"
+            }
+        }
+    ]
+}
+```

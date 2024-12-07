@@ -154,3 +154,6 @@ cython_debug/
 
 # Bedrock Structures
 *.mcstructure
+
+# Testing Folders
+/test

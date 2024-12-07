@@ -1,0 +1,18 @@
+{
+    "block_mapping": [
+        {
+            "structure_id": "add_your_structure_id_here",
+            "mapping": {
+                "minecraft:dirt": "namespace:custom_dirt",
+                "minecraft:stone": "namespace:custom_stone"
+            }
+        },
+        {
+            "structure_id": "add_another_structure_id_here",
+            "mapping": {
+                "minecraft:diamond_block": "namespace:custom_diamond_block",
+                "minecraft:iron_ore": "namespace:custom_iron_ore"
+            }
+        }
+    ]
+}
