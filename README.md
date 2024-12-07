@@ -29,10 +29,16 @@ The reason this program is built in Python is because:
 This converter is available as a [Regolith](https://github.com/Bedrock-OSS/regolith) filter as well.
 The filter allows you to place your `.nbt` structure files straight into the `packs/BP/structures` folder which will be compiled into the `.mcstructure` format. The original `.nbt` will be removed in the compiled version.
 
+You can install this filter through CLI with:
+
+```
+regolith install github.com/JaylyDev/nbt-to-mcstructure/nbt-to-mcstructure==regolith-filter
+```
+
 Add this to your Regolith filter definitions to enable the filter.
 
 ```jsonc
-"nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure/tree/regolith-filter", "version": "HEAD"}
+"nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "regolith-filter"}
 ```
 
 When installed, it will generate a `settings.json` file in `data/nbt_to_mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
