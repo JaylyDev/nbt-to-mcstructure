@@ -30,7 +30,6 @@ This converter is available as a [Regolith](https://github.com/Bedrock-OSS/regol
 The filter allows you to place your `.nbt` structure files straight into the `packs/BP/structures` folder which will be compiled into the `.mcstructure` format. The original `.nbt` will be removed in the compiled version.
 
 You can install this filter through CLI with:
-
 ```
 regolith install github.com/JaylyDev/nbt-to-mcstructure/nbt-to-mcstructure==regolith-filter
 ```
