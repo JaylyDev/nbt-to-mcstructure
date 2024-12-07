@@ -10,7 +10,7 @@ import threading
 import json
 
 structurePath = 'BP/structures'  # Path of structures
-settings_path = './data/nbt_to_mcstructure/settings.json'
+settings_path = './data/nbt-to-mcstructure/settings.json'
 
 # Load settings file
 with open(settings_path, "r") as f:

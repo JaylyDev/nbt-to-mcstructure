@@ -41,7 +41,7 @@ Add this to your Regolith filter definitions to enable the filter.
 "nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "regolith-filter"}
 ```
 
-When installed, it will generate a `settings.json` file in `data/nbt_to_mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
+When installed, it will generate a `settings.json` file in `data/nbt-to-mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
 ```jsonc
 {
     "block_mapping": [
