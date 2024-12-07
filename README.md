@@ -31,13 +31,13 @@ The filter allows you to place your `.nbt` structure files straight into the `pa
 
 You can install this filter through CLI with:
 ```
-regolith install github.com/JaylyDev/nbt-to-mcstructure/nbt-to-mcstructure==regolith-filter
+regolith install github.com/JaylyDev/nbt-to-mcstructure/nbt-to-mcstructure
 ```
 
 Add this to your Regolith filter definitions to enable the filter.
 
 ```jsonc
-"nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "regolith-filter"}
+"nbt_to_mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "latest"}
 ```
 
 When installed, it will generate a `settings.json` file in `data/nbt-to-mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
