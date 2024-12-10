@@ -1,0 +1,18 @@
+{
+    "block_mapping": [
+        {
+            "structure_id": "ancient_city/city_center/city_center_2",
+            "mapping": {
+                "minecraft:deepslate": "namespace:custom_deepslate",
+                "minecraft:deepslate_bricks": "namespace:custom_deepslate_bricks"
+            }
+        },
+        {
+            "structure_id": "bastion/treasure/ramparts/lava_basin_main",
+            "mapping": {
+                "minecraft:lava": "minecraft:water",
+                "minecraft:cracked_polished_blackstone_bricks": "minecraft:iron_ore"
+            }
+        }
+    ]
+}
