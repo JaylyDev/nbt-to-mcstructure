@@ -19,7 +19,7 @@
 					"readOnly": false,
 					"target": "development"
 				},
-				"filters": []
+				"filters": [{ "filter": "nbt-to-mcstructure" }]
 			}
 		}
 	}
