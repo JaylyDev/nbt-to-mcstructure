@@ -28,7 +28,7 @@ jobs:
       - run: python __main__.py
       
   test_regolith_filter:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Regolith Filter
     steps:
       - uses: actions/checkout@v4
