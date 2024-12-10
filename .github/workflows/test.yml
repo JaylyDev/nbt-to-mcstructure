@@ -30,12 +30,39 @@ jobs:
   test_regolith_filter:
     runs-on: ubuntu-latest
     name: Regolith Filter
+    strategy:
+      matrix:
+        regolith-action-version: ['v1.5.0']
     steps:
       - uses: actions/checkout@v4
-
-      - run: cd ./regolith-test-project
-      
-      - name: Run Regolith
-        uses: Bedrock-OSS/regolith-action@v1.5.0
+      - uses: denoland/setup-deno@v1
         with:
-          profile: default
+          deno-version: vx.x.x
+      - uses: iffy/install-nim@v4.2.0
+        with:
+          version: stable
+      - name: list versions
+        shell: bash
+        run: |
+          python --version
+          node -v
+          nim -v
+          java -version
+          deno --version
+          dotnet --list-sdks
+      - name: Install Regolith
+        shell: bash
+        run: |
+          wget https://github.com/Bedrock-OSS/regolith/releases/download/${{ matrix.regolith-action-version }}/regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
+          tar -xzf regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
+          mv regolith /usr/local/bin
+          rm regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
+          chmod +x /usr/local/bin/regolith
+      - name: Install Regolith Filters
+        shell: bash
+        working-directory: './regolith-test-project'
+        run: regolith install-all
+      - name: Compiles
+        shell: bash
+        working-directory: './regolith-test-project'
+        run: regolith run default
