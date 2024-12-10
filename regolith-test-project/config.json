@@ -17,7 +17,7 @@
 				"export": {
 					"build": "standard",
 					"readOnly": false,
-					"target": "development"
+					"target": "none"
 				},
 				"filters": [{ "filter": "nbt-to-mcstructure" }]
 			}
