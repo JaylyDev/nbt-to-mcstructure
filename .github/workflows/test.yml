@@ -30,6 +30,9 @@ jobs:
   test_regolith_filter:
     runs-on: ubuntu-latest
     name: Regolith Filter
+    defaults:
+      run:
+        working-directory: './regolith-test-project'
     steps:
       - uses: actions/checkout@v4
 
