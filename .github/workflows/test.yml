@@ -30,12 +30,11 @@ jobs:
   test_regolith_filter:
     runs-on: ubuntu-latest
     name: Regolith Filter
-    defaults:
-      run:
-        working-directory: './regolith-test-project'
     steps:
       - uses: actions/checkout@v4
 
+      - run: cd ./regolith-test-project
+      
       - name: Run Regolith
         uses: Bedrock-OSS/regolith-action@v1.5.0
         with:
