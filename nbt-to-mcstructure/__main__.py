@@ -7,15 +7,13 @@ from java_structures import javaToBedrock
 from os import listdir, makedirs, remove
 from os.path import isfile, join, isdir
 import threading
-import json
+from better_json_tools import load_jsonc
 
 structurePath = 'BP/structures'  # Path of structures
 settings_path = './data/nbt-to-mcstructure/settings.json'
 
 # Load settings file
-with open(settings_path, "r") as f:
-    json_file = f.read()
-    settings = json.loads(json_file)
+settings = load_jsonc(settings_path).data
 
 def get_custom_mapping(structure_id):
     for entry in settings.get("block_mapping", []):
