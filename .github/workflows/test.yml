@@ -32,7 +32,7 @@ jobs:
     name: Regolith Filter
     strategy:
       matrix:
-        regolith-action-version: ['v1.5.0']
+        regolith-version: ['1.5.0']
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
@@ -53,10 +53,10 @@ jobs:
       - name: Install Regolith
         shell: bash
         run: |
-          wget https://github.com/Bedrock-OSS/regolith/releases/download/${{ matrix.regolith-action-version }}/regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
-          tar -xzf regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
+          wget https://github.com/Bedrock-OSS/regolith/releases/download/${{ matrix.regolith-version }}/regolith_${{ matrix.regolith-version }}_linux_amd64.tar.gz
+          tar -xzf regolith_${{ matrix.regolith-version }}_linux_amd64.tar.gz
           mv regolith /usr/local/bin
-          rm regolith_${{ matrix.regolith-action-version }}_linux_amd64.tar.gz
+          rm regolith_${{ matrix.regolith-version }}_linux_amd64.tar.gz
           chmod +x /usr/local/bin/regolith
       - name: Install Regolith Filters
         shell: bash
