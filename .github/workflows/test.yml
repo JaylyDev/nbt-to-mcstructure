@@ -1,4 +1,4 @@
-name: "Test"
+name: Test
 
 on:
   push:
@@ -7,9 +7,9 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test_cli:
     runs-on: ubuntu-latest
-    name: Convert nbt to mcstructure
+    name: CLI
     steps:
       - uses: actions/checkout@v3
 
@@ -26,3 +26,12 @@ jobs:
       - run: unzip assets/vanilla_structures.zip -d structures
 
       - run: python __main__.py
+      
+  test_regolith_filter:
+    runs-on: windows-latest
+    name: Regolith Filter
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Regolith
+        run: winget install Bedrock-OSS.regolith
