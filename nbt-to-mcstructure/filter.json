@@ -1,0 +1,10 @@
+{
+    "description": "Converts Java .nbt files to Bedrock .mcstructure files",
+    "filters": [
+        {
+            "runWith": "python",
+            "script": "./__main__.py",
+            "name": "Converts Java .nbt files to Bedrock .mcstructure files"
+        }
+    ]
+}
