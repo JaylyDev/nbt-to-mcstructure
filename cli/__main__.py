@@ -8,13 +8,19 @@ from os import listdir, makedirs, remove
 from os.path import isfile, join, isdir
 import threading
 import json
+import re
 
 structurePath = 'structures'  # Path of structures
 settings_path = './settings.json'
 
-def get_custom_mapping(structure_id: str, settings: dict):
+def get_block_mapping(structure_id: str, settings: dict):
     for entry in settings.get("block_mapping", []):
-        if entry["structure_id"] == structure_id:
+        pattern = entry["structure_id"]
+        if "*" in pattern:
+            regex = re.compile("^" + re.escape(pattern).replace("\\*", ".*") + "$")
+            if regex.match(structure_id):
+                return entry["mapping"]
+        elif pattern == structure_id:
             return entry["mapping"]
     return {}
 
@@ -35,9 +41,9 @@ def convert(file: str, settings: dict):
     print(f"Loaded {file} in {round((time() - startTime) * 1000, 2)} ms")
 
     # Get custom mapping
-    custom_mapping = get_custom_mapping(structure_id, settings)
+    block_mapping = get_block_mapping(structure_id, settings)
 
-    mcstructure, size = javaToBedrock(nbt, structure_id, custom_mapping)
+    mcstructure, size = javaToBedrock(nbt, structure_id, block_mapping)
     startTime = time()
 
     with open(mcstructureFile, 'wb') as io:

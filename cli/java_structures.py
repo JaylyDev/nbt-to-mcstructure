@@ -168,7 +168,7 @@ def getBlockObject(dynamicblockid: str, format="bedrock"):
                 print(f"Warning: State name {statename} with value {statevalue} is not a valid state for {baseidentifier}. Valid values: {validValues}.")
         return object
 
-def javaToBedrock(structure: NBTFile, structure_id: str, custom_mapping: dict):
+def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
     blocks: TAG_List = structure["blocks"].value
     palette: TAG_List = structure["palette"].value
     oldsize: TAG_List = structure["size"].value
@@ -213,12 +213,12 @@ def javaToBedrock(structure: NBTFile, structure_id: str, custom_mapping: dict):
         baseBlockId = blockId.split("[")[0]  # Get the base block identifier
 
         # Check for exact match in custom mapping (with brackets)
-        if blockId in custom_mapping:
-            mapped_id = custom_mapping[blockId]
+        if blockId in block_mapping:
+            mapped_id = block_mapping[blockId]
             newPalette.append(getBlockObject(mapped_id, "bedrock"))
         # Check for base identifier match in custom mapping (ignore brackets)
-        elif baseBlockId in custom_mapping:
-            mapped_id = custom_mapping[baseBlockId]
+        elif baseBlockId in block_mapping:
+            mapped_id = block_mapping[baseBlockId]
             newPalette.append(getBlockObject(mapped_id, "bedrock"))
         # Fallback to default mapping
         elif blockId in blocksj2b:
