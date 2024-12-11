@@ -27,20 +27,29 @@ The reason this program is built in Python is because:
 ## Regolith Filter
 
 This converter is available as a [Regolith](https://github.com/Bedrock-OSS/regolith) filter as well.
-The filter allows you to place your `.nbt` structure files straight into the `packs/BP/structures` folder which will be compiled into the `.mcstructure` format. The original `.nbt` will be removed in the compiled version.
+The filter allows you to place your `.nbt` structure files straight into the `packs/BP/structures` folder which will be compiled into the `.mcstructure` format.
 
-Add this to your Regolith filter definitions to enable the filter.
+### How It Works
+The filter:
+- Converts `.nbt` structure files into `.mcstructure` format.
+- Removes the original `.nbt` files in the compiled version to keep your project clean.
+
+### Enabling the Filter
+Add the following to your Regolith filter definitions to enable the filter:
 
 ```jsonc
 "nbt-to-mcstructure": {"url": "github.com/JaylyDev/nbt-to-mcstructure", "version": "HEAD"}
 ```
 
-When installed, it will generate a `settings.json` file in `data/nbt-to-mcstructure/` folder. This holds settings for block mapping using other vanilla overwrites or functionality for a custom namespace.
+### Configuration
+Once installed, the filter generates a `settings.json` file located in `data/nbt-to-mcstructure/`. This file allows you to customize block mapping, either by using vanilla overwrites or defining a custom namespace.
+
+#### Example `settings.json`
 ```jsonc
 {
     "block_mapping": [
         {
-            "structure_id": "add_your_structure_id_here", // This is the exact same name as your filename excluding the file suffix.
+            "structure_id": "add_your_structure_id_here", // Matches your file name (excluding the file suffix).
             "mapping": {
                 "minecraft:dirt": "namespace:custom_dirt",
                 "minecraft:stone": "namespace:custom_stone"
@@ -56,6 +65,44 @@ When installed, it will generate a `settings.json` file in `data/nbt-to-mcstruct
     ]
 }
 ```
+
+### Using Wildcards
+Block mapping supports wildcards to simplify configurations. For example, instead of specifying mappings for each structure individually:
+
+```jsonc
+{
+    "block_mapping": [
+        {"structure_id": "oak_extra_small_1", "mapping": {"minecraft:oak_log": "namespace:custom_oak_log"}},
+        {"structure_id": "oak_extra_small_2", "mapping": {"minecraft:oak_log": "namespace:custom_oak_log"}},
+        {"structure_id": "oak_extra_small_3", "mapping": {"minecraft:oak_log": "namespace:custom_oak_log"}},
+        {"structure_id": "oak_extra_small_4", "mapping": {"minecraft:oak_log": "namespace:custom_oak_log"}},
+        {"structure_id": "oak_extra_small_5", "mapping": {"minecraft:oak_log": "namespace:custom_oak_log"}}
+    ]
+}
+```
+
+You can use a wildcard to reduce redundancy:
+
+```jsonc
+{
+    "block_mapping": [
+        {
+            "structure_id": "oak_extra_small_*",
+            "mapping": {
+                "minecraft:oak_log": "namespace:custom_oak_log"
+            }
+        }
+    ]
+}
+```
+
+This approach saves space and simplifies configurations for large projects involving multiple similar structures, such as trees, houses, or castles.
+
 ## Contributing
-We're looking for contributors to keep this converter as up-to-date as possible. Reach out to JaylyDev in regards to the regular program and to ThijsHankelMC in regards to the Regolith Filter.
-Discord IDs: jaylymc && thijsmc
+We welcome contributions to keep this converter up-to-date and efficient. For inquiries or to collaborate:
+- **JaylyDev**: Contact regarding the core program.
+- **ThijsHankelMC**: Contact regarding the Regolith Filter.
+
+Discord IDs:
+- **jaylymc**
+- **thijsmc**
