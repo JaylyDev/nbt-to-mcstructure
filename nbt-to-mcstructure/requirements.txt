@@ -3,3 +3,4 @@ mdurl==0.1.2
 mutf8==1.0.6
 Pygments==2.15.0
 rich==13.3.2
+better-json-tools~=1.0
