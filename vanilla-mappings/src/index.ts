@@ -142,7 +142,7 @@ function main() {
 
     // Convert
     const blocksJ2B: Record<string, string> = createBlocksJ2B(javaBlocks, bedrockBlocks, blockTypeConverters);
-    fs.writeFileSync(path.join(process.cwd(), "vanilla-mappings/dist/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
+    fs.writeFileSync(path.join(scriptDir, "dist/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
 }
 
 main();
