@@ -78,4 +78,6 @@ jobs:
       - run: npm ci
         working-directory: ./vanilla-mappings
       - run: npm run build
+        working-directory: ./vanilla-mappings
       - run: npm test
+        working-directory: ./vanilla-mappings
