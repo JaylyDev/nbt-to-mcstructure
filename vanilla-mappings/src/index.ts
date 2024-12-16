@@ -114,12 +114,12 @@ function createBlocksJ2B(
         const bedrockBlockID = blockIdsMap.get(blockId) ?? blockId;
 
         if (!blockTypeConverter) {
-            console.error(`No block type converter found for block type ${definition.type}`);
+            console.error(`[BlockJ2B] No block type converter found for block type '${definition.type}'`);
             continue;
         }
 
         if (!bedrockBlocks.data_items.find((item) => item.name === bedrockBlockID)) {
-            console.error(`No bedrock block found for block id ${blockId}`);
+            console.error(`[BlockJ2B] No bedrock block found for block id '${blockId}'`);
             continue;
         }
 
@@ -142,6 +142,15 @@ function createBlocksJ2B(
     return blocksJ2B;
 }
 
+function assertBlockTypeConverters(converters: Map<string, BlockTypeConverterBase>, javaBlocks: Record<string, JavaBlock>) {
+    const blockTypes = getJavaBlockTypes(javaBlocks);
+    for (const blockType in blockTypes) {
+        if (!converters.has(blockType)) {
+            console.warn(`[Registry] Block type converter '${blockType}' is not registered in BlockTypeConverters map`);
+        }
+    }
+}
+
 function main() {
     // Load data files
     const scriptDir: string = path.join(__dirname, "..");
@@ -157,6 +166,9 @@ function main() {
         .set("minecraft:cauldron", new CauldronTypeConverter())
         .set("minecraft:air", new AirTypeConverter())
         .set("minecraft:redstone_wire", new RedstoneWireTypeConverter());
+
+    // Assert
+    assertBlockTypeConverters(blockTypeConverters, javaBlocks);
 
     // Convert
     const blocksJ2B: Record<string, string> = createBlocksJ2B(javaBlocks, bedrockBlocks, blockTypeConverters);
