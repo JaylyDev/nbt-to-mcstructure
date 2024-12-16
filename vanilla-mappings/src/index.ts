@@ -3,6 +3,14 @@ import * as path from "path";
 import { ButtonTypeConverter } from "./BlockTypeConverters/Button";
 import { BlockTypeConverterBase } from "./BlockTypeConverters/BaseClass";
 import { blockIdsMap } from "./Mappings/blocks";
+import { DoorTypeConverter } from "./BlockTypeConverters/Door";
+import { FenceTypeConverter } from "./BlockTypeConverters/Fence";
+import { FenceGateTypeConverter } from "./BlockTypeConverters/FenceGate";
+import { CeilingHangingSignTypeConverter } from "./BlockTypeConverters/CeilingHangingSign";
+import { BlockTypeConverter } from "./BlockTypeConverters/Block";
+import { CauldronTypeConverter } from "./BlockTypeConverters/Cauldron";
+import { AirTypeConverter } from "./BlockTypeConverters/Air";
+import { RedstoneWireTypeConverter } from "./BlockTypeConverters/RedstoneWire";
 
 interface JavaBlockDefinition {
     type: string;
@@ -12,8 +20,9 @@ interface JavaBlockDefinition {
 }
 
 interface JavaBlockState {
+    default?: true;
     id: number;
-    properties: Record<string, string>;
+    properties?: Record<string, string>;
 }
 
 interface JavaBlock {
@@ -114,8 +123,8 @@ function createBlocksJ2B(
             continue;
         }
 
-        if (states) {
-            for (const state of states) {
+        for (const state of states) {
+            if (state.properties) {
                 const properties = blockTypeConverter.convert(blockId, state.properties);
                 // Required format: minecraft:block[key=value,key=value]
                 const javaStateString = Object.entries(state.properties)
@@ -125,9 +134,9 @@ function createBlocksJ2B(
                     .map(([key, value]) => `${key}=${value}`)
                     .join(",");
                 blocksJ2B[blockId + "[" + javaStateString + "]"] = bedrockBlockID + "[" + bedrockStateString + "]";
+            } else {
+                blocksJ2B[blockId + "[]"] = bedrockBlockID + "[]";
             }
-        } else {
-            blocksJ2B[blockId + "[]"] = blockId + "[]";
         }
     }
     return blocksJ2B;
@@ -138,11 +147,20 @@ function main() {
     const scriptDir: string = path.join(__dirname, "..");
     const javaBlocks: Record<string, JavaBlock> = JSON.parse(fs.readFileSync(path.join(scriptDir, "data/java-blocks.json"), "utf-8"));
     const bedrockBlocks: MojangBlocks = JSON.parse(fs.readFileSync(path.join(scriptDir, "data/bedrock-blocks.json"), "utf-8"));
-    const blockTypeConverters = new Map<string, BlockTypeConverterBase>().set("minecraft:button", new ButtonTypeConverter());
+    const blockTypeConverters = new Map<string, BlockTypeConverterBase>()
+        .set("minecraft:block", new BlockTypeConverter())
+        .set("minecraft:button", new ButtonTypeConverter())
+        .set("minecraft:door", new DoorTypeConverter())
+        .set("minecraft:fence", new FenceTypeConverter())
+        .set("minecraft:fence_gate", new FenceGateTypeConverter())
+        .set("minecraft:ceiling_hanging_sign", new CeilingHangingSignTypeConverter())
+        .set("minecraft:cauldron", new CauldronTypeConverter())
+        .set("minecraft:air", new AirTypeConverter())
+        .set("minecraft:redstone_wire", new RedstoneWireTypeConverter());
 
     // Convert
     const blocksJ2B: Record<string, string> = createBlocksJ2B(javaBlocks, bedrockBlocks, blockTypeConverters);
-    fs.writeFileSync(path.join(scriptDir, "dist/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
+    fs.writeFileSync(path.join(scriptDir, "../cli/data/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
 }
 
 main();

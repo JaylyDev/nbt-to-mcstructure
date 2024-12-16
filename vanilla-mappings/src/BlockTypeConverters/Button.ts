@@ -1,7 +1,7 @@
 import { BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaButtonStates } from "@minecraft/vanilla-data";
 
-export interface JavaButtonProperties extends Record<string, string> {
+export interface JavaButtonProperties {
     face: string;
     facing: string;
     powered: string;
@@ -17,9 +17,15 @@ export class ButtonTypeConverter extends BlockTypeConverterBase {
             facing_direction: 0,
         };
 
-        if (powered === "true") {
-            states.button_pressed_bit = true;
+        switch (powered) {
+            case "true":
+                states.button_pressed_bit = true;
+                break;
+
+            default:
+                break;
         }
+
         if (face === "floor") {
             states.facing_direction = 1;
         } else if (face === "wall") {
