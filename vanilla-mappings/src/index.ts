@@ -9,6 +9,8 @@ import { CeilingHangingSignTypeConverter } from "./BlockTypeConverters/CeilingHa
 import { RedstoneWireTypeConverter } from "./BlockTypeConverters/RedstoneWire";
 import { javaBlocks, bedrockBlocks, scriptDir } from "./Data/MinecraftBlocks";
 import { JavaBlock, BlockType, MojangBlocks } from "./Data/Schema";
+import { FlowerPotTypeConverter } from "./BlockTypeConverters/FlowerPot";
+import { SkullTypeConverter } from "./BlockTypeConverters/Skull";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -105,6 +107,8 @@ function main() {
         .set("minecraft:fence_gate", new FenceGateTypeConverter())
         .set("minecraft:ceiling_hanging_sign", new CeilingHangingSignTypeConverter())
         .set("minecraft:redstone_wire", new RedstoneWireTypeConverter())
+        .set("minecraft:flower_pot", new FlowerPotTypeConverter())
+        .set("minecraft:skull", new SkullTypeConverter())
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
         .set("minecraft:block", new EmptyBlockTypeConverter())
@@ -175,7 +179,10 @@ function main() {
         .set("minecraft:tinted_glass", new EmptyBlockTypeConverter())
         .set("minecraft:waterlogged_transparent", new EmptyBlockTypeConverter())
         .set("minecraft:wet_sponge", new EmptyBlockTypeConverter())
-        .set("minecraft:wither_rose", new EmptyBlockTypeConverter());
+        .set("minecraft:wither_rose", new EmptyBlockTypeConverter())
+        .set("minecraft:note", new EmptyBlockTypeConverter())
+        .set("minecraft:jukebox", new EmptyBlockTypeConverter())
+        .set("minecraft:iron_bars", new EmptyBlockTypeConverter());
 
     // Assert
     assertBlockTypeConverters(blockTypeConverters, javaBlocks);
