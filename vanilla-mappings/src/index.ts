@@ -11,6 +11,8 @@ import { javaBlocks, bedrockBlocks, scriptDir } from "./Data/MinecraftBlocks";
 import { JavaBlock, BlockType, MojangBlocks } from "./Data/Schema";
 import { FlowerPotTypeConverter } from "./BlockTypeConverters/FlowerPot";
 import { SkullTypeConverter } from "./BlockTypeConverters/Skull";
+import { LeavesTypeConverter } from "./BlockTypeConverters/Leaves";
+import { RotatedPillarTypeConverter } from "./BlockTypeConverters/RotatedPillar";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -109,6 +111,8 @@ function main() {
         .set("minecraft:redstone_wire", new RedstoneWireTypeConverter())
         .set("minecraft:flower_pot", new FlowerPotTypeConverter())
         .set("minecraft:skull", new SkullTypeConverter())
+        .set("minecraft:leaves", new LeavesTypeConverter())
+        .set("minecraft:rotated_pillar", new RotatedPillarTypeConverter())
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
         .set("minecraft:block", new EmptyBlockTypeConverter())
@@ -182,7 +186,9 @@ function main() {
         .set("minecraft:wither_rose", new EmptyBlockTypeConverter())
         .set("minecraft:note", new EmptyBlockTypeConverter())
         .set("minecraft:jukebox", new EmptyBlockTypeConverter())
-        .set("minecraft:iron_bars", new EmptyBlockTypeConverter());
+        .set("minecraft:iron_bars", new EmptyBlockTypeConverter())
+        .set("minecraft:target", new EmptyBlockTypeConverter())
+        .set("minecraft:snowy_dirt", new EmptyBlockTypeConverter());
 
     // Assert
     assertBlockTypeConverters(blockTypeConverters, javaBlocks);
