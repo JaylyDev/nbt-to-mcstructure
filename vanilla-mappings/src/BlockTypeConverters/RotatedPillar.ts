@@ -10,7 +10,7 @@ export type BedrockRotatedPillarProperties = Required<AcaciaLogStates>;
 export class RotatedPillarTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaRotatedPillarProperties): BedrockBlock<BedrockRotatedPillarProperties> {
         const states: BedrockRotatedPillarProperties = {
-            pillar_axis: "x",
+            pillar_axis: "y",
         };
         switch (properties.axis) {
             case "x":
@@ -29,3 +29,4 @@ export class RotatedPillarTypeConverter extends BlockTypeConverterBase {
         return { name: id, properties: states };
     }
 }
+7

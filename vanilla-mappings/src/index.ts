@@ -19,6 +19,11 @@ import { BambooSaplingTypeConverter, SaplingTypeConverter } from "./BlockTypeCon
 import { CoralWallFanTypeConverter } from "./BlockTypeConverters/CoralWallFan";
 import { DaylightDetectorTypeConverter } from "./BlockTypeConverters/DaylightDetector";
 import { KelpTypeConverter } from "./BlockTypeConverters/Kelp";
+import { CauldronTypeConverter } from "./BlockTypeConverters/Cauldron";
+import { JackOLanternTypeConverter, PumpkinTypeConverter } from "./BlockTypeConverters/Pumpkin";
+import { TorchTypeConverter } from "./BlockTypeConverters/Torch";
+import { TwistingVinesTypeConverter } from "./BlockTypeConverters/TwistingVines";
+import { WeepingVinesTypeConverter } from "./BlockTypeConverters/WeepingVines";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -92,7 +97,10 @@ function createBlocksJ2B(
                 blocksJ2B[blockId + "[" + javaStateString + "]"] = bedrockBlock.name + "[" + bedrockStateString + "]";
             } else {
                 const bedrockBlock = blockTypeConverter.convert(blockId, {});
-                blocksJ2B[blockId + "[]"] = bedrockBlock.name + "[]";
+                const bedrockStateString = Object.entries(bedrockBlock.properties)
+                    .map(([key, value]) => `${key}=${value}`)
+                    .join(",");
+                blocksJ2B[blockId + "[]"] = bedrockBlock.name + "[" + bedrockStateString + "]";
             }
         }
     }
@@ -129,8 +137,20 @@ function main() {
         .set("minecraft:base_coral_wall_fan", new CoralWallFanTypeConverter())
         .set("minecraft:daylight_detector", new DaylightDetectorTypeConverter())
         .set("minecraft:bamboo_sapling", new BambooSaplingTypeConverter())
-        .set("minecraft:kelp_plant", new KelpTypeConverter())
+        .set("minecraft:cauldron", new CauldronTypeConverter())
+        .set("minecraft:lava_cauldron", new CauldronTypeConverter())
+        .set("minecraft:layered_cauldron", new CauldronTypeConverter())
+        .set("minecraft:pumpkin", new PumpkinTypeConverter())
+        .set("minecraft:jack_o_lantern", new JackOLanternTypeConverter())
+        .set("minecraft:torch", new TorchTypeConverter())
+        .set("minecraft:wall_torch", new TorchTypeConverter())
         .set("minecraft:kelp", new KelpTypeConverter())
+        .set("minecraft:kelp_plant", new KelpTypeConverter())
+        .set("minecraft:twisting_vines", new TwistingVinesTypeConverter())
+        .set("minecraft:twisting_vines_plant", new TwistingVinesTypeConverter())
+        .set("minecraft:weeping_vines", new WeepingVinesTypeConverter())
+        .set("minecraft:weeping_vines_plant", new WeepingVinesTypeConverter())
+
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
         .set("minecraft:block", new EmptyBlockTypeConverter())
@@ -151,7 +171,6 @@ function main() {
         .set("minecraft:mushroom", new EmptyBlockTypeConverter())
         .set("minecraft:budding_amethyst", new EmptyBlockTypeConverter())
         .set("minecraft:cartography_table", new EmptyBlockTypeConverter())
-        .set("minecraft:cauldron", new EmptyBlockTypeConverter())
         .set("minecraft:weathering_copper_full", new EmptyBlockTypeConverter())
         .set("minecraft:chorus_plant", new EmptyBlockTypeConverter())
         .set("minecraft:eyeblossom", new EmptyBlockTypeConverter())
@@ -185,7 +204,6 @@ function main() {
         .set("minecraft:infested", new EmptyBlockTypeConverter())
         .set("minecraft:jukebox", new EmptyBlockTypeConverter())
         .set("minecraft:mangrove_roots", new EmptyBlockTypeConverter())
-        .set("minecraft:lava_cauldron", new EmptyBlockTypeConverter())
         .set("minecraft:waterlily", new EmptyBlockTypeConverter())
         .set("minecraft:magma", new EmptyBlockTypeConverter())
         .set("minecraft:bonemealable_feature_placer", new EmptyBlockTypeConverter())
@@ -195,7 +213,6 @@ function main() {
         .set("minecraft:nether_sprouts", new EmptyBlockTypeConverter())
         .set("minecraft:netherrack", new EmptyBlockTypeConverter())
         .set("minecraft:powder_snow", new EmptyBlockTypeConverter())
-        .set("minecraft:pumpkin", new EmptyBlockTypeConverter())
         .set("minecraft:powered", new EmptyBlockTypeConverter())
         .set("minecraft:redstone_lamp", new EmptyBlockTypeConverter())
         .set("minecraft:rooted_dirt", new EmptyBlockTypeConverter())
@@ -206,7 +223,6 @@ function main() {
         .set("minecraft:snow_layer", new EmptyBlockTypeConverter())
         .set("minecraft:soul_fire", new EmptyBlockTypeConverter())
         .set("minecraft:soul_sand", new EmptyBlockTypeConverter())
-        .set("minecraft:torch", new EmptyBlockTypeConverter())
         .set("minecraft:spawner", new EmptyBlockTypeConverter())
         .set("minecraft:sponge", new EmptyBlockTypeConverter())
         .set("minecraft:spore_blossom", new EmptyBlockTypeConverter())
@@ -214,8 +230,6 @@ function main() {
         .set("minecraft:target", new EmptyBlockTypeConverter())
         .set("minecraft:tinted_glass", new EmptyBlockTypeConverter())
         .set("minecraft:waterlogged_transparent", new EmptyBlockTypeConverter())
-        .set("minecraft:twisting_vines_plant", new EmptyBlockTypeConverter())
-        .set("minecraft:weeping_vines_plant", new EmptyBlockTypeConverter())
         .set("minecraft:wet_sponge", new EmptyBlockTypeConverter())
         .set("minecraft:wither_rose", new EmptyBlockTypeConverter())
         .set("minecraft:note", new EmptyBlockTypeConverter())
@@ -228,6 +242,7 @@ function main() {
     // Convert
     const blocksJ2B: Record<string, string> = createBlocksJ2B(javaBlocks, bedrockBlocks, blockTypeConverters);
     fs.writeFileSync(path.join(scriptDir, "../cli/data/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
+    fs.writeFileSync(path.join(scriptDir, "../nbt-to-mcstructure/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
 }
 
 main();

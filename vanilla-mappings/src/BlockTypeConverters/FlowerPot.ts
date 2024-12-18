@@ -11,6 +11,6 @@ export class FlowerPotTypeConverter extends BlockTypeConverterBase {
             update_bit: false,
         };
 
-        return { name: id, properties: states };
+        return { name: "minecraft:flower_pot", properties: states };
     }
 }
