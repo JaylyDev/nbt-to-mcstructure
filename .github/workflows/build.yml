@@ -42,9 +42,7 @@ jobs:
           built_path=nbt-to-mcstructure_v${{ github.event.release.tag_name }}_${{ runner.os }}_${{ matrix.cfg.architecture }}.zip
           echo "BUILT_PATH=$built_path" >> $GITHUB_ENV
           cp ./structures ./dist -r
-          cp ./assets ./dist -r
-          rm ./dist/assets/demo_video.gif
-          rm ./dist/assets/vanilla_structures.zip
+          cp ./cli/data ./dist -r
           cd dist
           if [ "${{ runner.os }}" == "Windows" ]; then
             7z a $built_path .

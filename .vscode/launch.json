@@ -5,10 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Launch Program",
-      "type": "python",
+      "name": "Node.js: Launch Program",
+      "program": "${workspaceFolder}/vanilla-mappings/dist/index.js",
       "request": "launch",
-      "program": "${workspaceFolder}\\__main__.py",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "preLaunchTask": "tsc: build - vanilla-mappings/tsconfig.json"
+    },
+    {
+      "name": "Python: Launch Program",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/cli/__main__.py",
       "console": "integratedTerminal",
       "justMyCode": true
     }
