@@ -15,6 +15,7 @@ import { LeavesTypeConverter } from "./BlockTypeConverters/Leaves";
 import { RotatedPillarTypeConverter } from "./BlockTypeConverters/RotatedPillar";
 import { WeightedPressurePlateTypeConverter, PressurePlateTypeConverter } from "./BlockTypeConverters/PressurePlate";
 import { BedTypeConverter } from "./BlockTypeConverters/Bed";
+import { WallTypeConverter } from "./BlockTypeConverters/Wall";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -118,6 +119,7 @@ function main() {
         .set("minecraft:weighted_pressure_plate", new WeightedPressurePlateTypeConverter())
         .set("minecraft:pressure_plate", new PressurePlateTypeConverter())
         .set("minecraft:bed", new BedTypeConverter())
+        .set("minecraft:wall", new WallTypeConverter())
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
         .set("minecraft:block", new EmptyBlockTypeConverter())
