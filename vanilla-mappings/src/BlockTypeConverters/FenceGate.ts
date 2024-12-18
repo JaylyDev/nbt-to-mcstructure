@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { FenceGateStates } from "@minecraft/vanilla-data";
 
 export interface JavaFenceGateProperties {
@@ -11,7 +11,7 @@ export interface JavaFenceGateProperties {
 export type BedrockFenceGateProperties = Required<FenceGateStates>;
 
 export class FenceGateTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaFenceGateProperties): BedrockFenceGateProperties {
+    public convert(id: string, properties: JavaFenceGateProperties): BedrockBlock<BedrockFenceGateProperties> {
         const { facing, in_wall, open, powered } = properties;
         const states: BedrockFenceGateProperties = {
             direction: 0,
@@ -49,6 +49,6 @@ export class FenceGateTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return { name: id, properties: states };
     }
 }

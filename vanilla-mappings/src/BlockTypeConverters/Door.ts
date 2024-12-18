@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaDoorStates } from "@minecraft/vanilla-data";
 
 export interface JavaDoorProperties {
@@ -12,7 +12,7 @@ export interface JavaDoorProperties {
 export type BedrockDoorProperties = Required<AcaciaDoorStates>;
 
 export class DoorTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaDoorProperties): BedrockDoorProperties {
+    public convert(id: string, properties: JavaDoorProperties): BedrockBlock<BedrockDoorProperties> {
         const { facing, half, hinge, open, powered } = properties;
         const states: BedrockDoorProperties = {
             direction: 0,
@@ -59,6 +59,6 @@ export class DoorTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return { name: id, properties: states };
     }
 }

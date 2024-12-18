@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { BedStates } from "@minecraft/vanilla-data";
 
 export interface JavaBedProperties {
@@ -10,7 +10,7 @@ export interface JavaBedProperties {
 export type BedrockBedProperties = Required<BedStates>;
 
 export class BedTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaBedProperties): BedrockBedProperties {
+    public convert(id: string, properties: JavaBedProperties): BedrockBlock<BedrockBedProperties> {
         const states: BedrockBedProperties = {
             direction: 0,
             head_piece_bit: false,
@@ -50,6 +50,9 @@ export class BedTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return {
+            name: "minecraft:bed",
+            properties: states,
+        };
     }
 }

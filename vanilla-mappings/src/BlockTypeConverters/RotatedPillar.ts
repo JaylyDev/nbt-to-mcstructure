@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaLogStates } from "@minecraft/vanilla-data";
 
 export interface JavaRotatedPillarProperties {
@@ -8,7 +8,7 @@ export interface JavaRotatedPillarProperties {
 export type BedrockRotatedPillarProperties = Required<AcaciaLogStates>;
 
 export class RotatedPillarTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaRotatedPillarProperties): BedrockRotatedPillarProperties {
+    public convert(id: string, properties: JavaRotatedPillarProperties): BedrockBlock<BedrockRotatedPillarProperties> {
         const states: BedrockRotatedPillarProperties = {
             pillar_axis: "x",
         };
@@ -26,6 +26,6 @@ export class RotatedPillarTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return { name: id, properties: states };
     }
 }

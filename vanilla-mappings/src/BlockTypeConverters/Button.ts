@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaButtonStates } from "@minecraft/vanilla-data";
 
 export interface JavaButtonProperties {
@@ -10,7 +10,7 @@ export interface JavaButtonProperties {
 export type BedrockButtonProperties = Required<AcaciaButtonStates>;
 
 export class ButtonTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaButtonProperties): BedrockButtonProperties {
+    public convert(id: string, properties: JavaButtonProperties): BedrockBlock<BedrockButtonProperties> {
         const { face, facing, powered } = properties;
         const states: BedrockButtonProperties = {
             button_pressed_bit: false,
@@ -40,6 +40,9 @@ export class ButtonTypeConverter extends BlockTypeConverterBase {
             }
         }
 
-        return states;
+        return {
+            name: id,
+            properties: states,
+        };
     }
 }

@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaLeavesStates } from "@minecraft/vanilla-data";
 
 export interface JavaLeavesProperties {
@@ -10,7 +10,7 @@ export interface JavaLeavesProperties {
 export type BedrockLeavesProperties = Required<AcaciaLeavesStates>;
 
 export class LeavesTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaLeavesProperties): BedrockLeavesProperties {
+    public convert(id: string, properties: JavaLeavesProperties): BedrockBlock<BedrockLeavesProperties> {
         const { distance, persistent, waterlogged } = properties;
         const states: BedrockLeavesProperties = {
             persistent_bit: false,
@@ -25,6 +25,6 @@ export class LeavesTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return { name: id, properties: states };
     }
 }

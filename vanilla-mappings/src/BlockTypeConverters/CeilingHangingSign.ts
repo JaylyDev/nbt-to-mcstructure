@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaHangingSignStates } from "@minecraft/vanilla-data";
 
 export interface JavaCeilingHangingSignProperties {
@@ -10,7 +10,7 @@ export interface JavaCeilingHangingSignProperties {
 export type BedrockCeilingHangingSignProperties = Required<AcaciaHangingSignStates>;
 
 export class CeilingHangingSignTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaCeilingHangingSignProperties): BedrockCeilingHangingSignProperties {
+    public convert(id: string, properties: JavaCeilingHangingSignProperties): BedrockBlock<BedrockCeilingHangingSignProperties> {
         const { attached, rotation, waterlogged } = properties;
         const states: BedrockCeilingHangingSignProperties = {
             attached_bit: false,
@@ -48,6 +48,9 @@ export class CeilingHangingSignTypeConverter extends BlockTypeConverterBase {
         states.ground_sign_direction = parseInt(rotation);
         states.hanging = true;
 
-        return states;
+        return {
+            name: id,
+            properties: states,
+        };
     }
 }

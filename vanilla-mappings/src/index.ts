@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as path from "path";
 import { ButtonTypeConverter } from "./BlockTypeConverters/Button";
 import { BlockTypeConverterBase, EmptyBlockTypeConverter } from "./BlockTypeConverters/BaseClass";
-import { blockIdsMap } from "./Mappings/blocks";
 import { DoorTypeConverter } from "./BlockTypeConverters/Door";
 import { FenceGateTypeConverter } from "./BlockTypeConverters/FenceGate";
 import { CeilingHangingSignTypeConverter } from "./BlockTypeConverters/CeilingHangingSign";
@@ -16,6 +15,10 @@ import { RotatedPillarTypeConverter } from "./BlockTypeConverters/RotatedPillar"
 import { WeightedPressurePlateTypeConverter, PressurePlateTypeConverter } from "./BlockTypeConverters/PressurePlate";
 import { BedTypeConverter } from "./BlockTypeConverters/Bed";
 import { WallTypeConverter } from "./BlockTypeConverters/Wall";
+import { BambooSaplingTypeConverter, SaplingTypeConverter } from "./BlockTypeConverters/Sapling";
+import { CoralWallFanTypeConverter } from "./BlockTypeConverters/CoralWallFan";
+import { DaylightDetectorTypeConverter } from "./BlockTypeConverters/DaylightDetector";
+import { KelpTypeConverter } from "./BlockTypeConverters/Kelp";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -64,31 +67,32 @@ function createBlocksJ2B(
         const block: JavaBlock = javaBlocks[blockId];
         const { definition, states } = block;
         const blockTypeConverter = blockTypeConverters.get(definition.type);
-        const bedrockBlockID = blockIdsMap.get(blockId) ?? blockId;
 
         if (!blockTypeConverter) {
             console.error(`[BlockJ2B] No block type converter found for block type '${definition.type}'`);
             continue;
         }
 
-        if (!bedrockBlocks.data_items.find((item) => item.name === bedrockBlockID)) {
-            console.error(`[BlockJ2B] No bedrock block found for block id '${blockId}'`);
-            continue;
-        }
-
         for (const state of states) {
             if (state.properties) {
-                const properties = blockTypeConverter.convert(blockId, state.properties);
+                const bedrockBlock = blockTypeConverter.convert(blockId, state.properties);
+
+                if (!bedrockBlocks.data_items.find((item) => item.name === bedrockBlock.name)) {
+                    console.error(`[BlockJ2B] No bedrock block found for block id '${blockId}'`);
+                    continue;
+                }
+
                 // Required format: minecraft:block[key=value,key=value]
                 const javaStateString = Object.entries(state.properties)
                     .map(([key, value]) => `${key}=${value}`)
                     .join(",");
-                const bedrockStateString = Object.entries(properties)
+                const bedrockStateString = Object.entries(bedrockBlock.properties)
                     .map(([key, value]) => `${key}=${value}`)
                     .join(",");
-                blocksJ2B[blockId + "[" + javaStateString + "]"] = bedrockBlockID + "[" + bedrockStateString + "]";
+                blocksJ2B[blockId + "[" + javaStateString + "]"] = bedrockBlock.name + "[" + bedrockStateString + "]";
             } else {
-                blocksJ2B[blockId + "[]"] = bedrockBlockID + "[]";
+                const bedrockBlock = blockTypeConverter.convert(blockId, {});
+                blocksJ2B[blockId + "[]"] = bedrockBlock.name + "[]";
             }
         }
     }
@@ -120,6 +124,13 @@ function main() {
         .set("minecraft:pressure_plate", new PressurePlateTypeConverter())
         .set("minecraft:bed", new BedTypeConverter())
         .set("minecraft:wall", new WallTypeConverter())
+        .set("minecraft:sapling", new SaplingTypeConverter())
+        .set("minecraft:coral_wall_fan", new CoralWallFanTypeConverter())
+        .set("minecraft:base_coral_wall_fan", new CoralWallFanTypeConverter())
+        .set("minecraft:daylight_detector", new DaylightDetectorTypeConverter())
+        .set("minecraft:bamboo_sapling", new BambooSaplingTypeConverter())
+        .set("minecraft:kelp_plant", new KelpTypeConverter())
+        .set("minecraft:kelp", new KelpTypeConverter())
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
         .set("minecraft:block", new EmptyBlockTypeConverter())
@@ -128,7 +139,6 @@ function main() {
         .set("minecraft:amethyst", new EmptyBlockTypeConverter())
         .set("minecraft:azalea", new EmptyBlockTypeConverter())
         .set("minecraft:barrier", new EmptyBlockTypeConverter())
-        .set("minecraft:bamboo_sapling", new EmptyBlockTypeConverter())
         .set("minecraft:beacon", new EmptyBlockTypeConverter())
         .set("minecraft:wool_carpet", new EmptyBlockTypeConverter())
         .set("minecraft:concrete_powder", new EmptyBlockTypeConverter())
@@ -164,7 +174,6 @@ function main() {
         .set("minecraft:end_portal", new EmptyBlockTypeConverter())
         .set("minecraft:tall_grass", new EmptyBlockTypeConverter())
         .set("minecraft:fletching_table", new EmptyBlockTypeConverter())
-        .set("minecraft:flower_pot", new EmptyBlockTypeConverter())
         .set("minecraft:frogspawn", new EmptyBlockTypeConverter())
         .set("minecraft:transparent", new EmptyBlockTypeConverter())
         .set("minecraft:grass", new EmptyBlockTypeConverter())
@@ -176,7 +185,6 @@ function main() {
         .set("minecraft:infested", new EmptyBlockTypeConverter())
         .set("minecraft:jukebox", new EmptyBlockTypeConverter())
         .set("minecraft:mangrove_roots", new EmptyBlockTypeConverter())
-        .set("minecraft:kelp_plant", new EmptyBlockTypeConverter())
         .set("minecraft:lava_cauldron", new EmptyBlockTypeConverter())
         .set("minecraft:waterlily", new EmptyBlockTypeConverter())
         .set("minecraft:magma", new EmptyBlockTypeConverter())

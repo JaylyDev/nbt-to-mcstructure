@@ -1,5 +1,5 @@
 import { RedstoneWireStates } from "@minecraft/vanilla-data";
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 
 export interface JavaRedstoneWireProperties {
     east: "up" | "side" | "none";
@@ -12,9 +12,12 @@ export interface JavaRedstoneWireProperties {
 export type BedrockRedstoneWireProperties = Required<RedstoneWireStates>;
 
 export class RedstoneWireTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaRedstoneWireProperties): BedrockRedstoneWireProperties {
+    public convert(id: string, properties: JavaRedstoneWireProperties): BedrockBlock<BedrockRedstoneWireProperties> {
         return {
-            redstone_signal: parseInt(properties.power),
+            name: id,
+            properties: {
+                redstone_signal: parseInt(properties.power),
+            },
         };
     }
 }

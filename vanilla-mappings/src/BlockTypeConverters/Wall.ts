@@ -1,4 +1,4 @@
-import { BlockTypeConverterBase } from "./BaseClass";
+import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { BrickWallStates } from "@minecraft/vanilla-data";
 
 export interface JavaWallProperties {
@@ -13,7 +13,7 @@ export interface JavaWallProperties {
 export type BedrockWallProperties = Required<BrickWallStates>;
 
 export class WallTypeConverter extends BlockTypeConverterBase {
-    public convert(id: string, properties: JavaWallProperties): BedrockWallProperties {
+    public convert(id: string, properties: JavaWallProperties): BedrockBlock<BedrockWallProperties> {
         const states: BedrockWallProperties = {
             wall_connection_type_east: "none",
             wall_connection_type_north: "none",
@@ -103,6 +103,6 @@ export class WallTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return states;
+        return { name: id, properties: states };
     }
 }
