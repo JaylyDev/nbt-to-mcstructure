@@ -24,6 +24,7 @@ import { JackOLanternTypeConverter, PumpkinTypeConverter } from "./BlockTypeConv
 import { TorchTypeConverter } from "./BlockTypeConverters/Torch";
 import { TwistingVinesTypeConverter } from "./BlockTypeConverters/TwistingVines";
 import { WeepingVinesTypeConverter } from "./BlockTypeConverters/WeepingVines";
+import { StandingSignTypeConverter } from "./BlockTypeConverters/StandingSign";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -150,6 +151,7 @@ function main() {
         .set("minecraft:twisting_vines_plant", new TwistingVinesTypeConverter())
         .set("minecraft:weeping_vines", new WeepingVinesTypeConverter())
         .set("minecraft:weeping_vines_plant", new WeepingVinesTypeConverter())
+        .set("minecraft:standing_sign", new StandingSignTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
@@ -241,8 +243,8 @@ function main() {
 
     // Convert
     const blocksJ2B: Record<string, string> = createBlocksJ2B(javaBlocks, bedrockBlocks, blockTypeConverters);
-    fs.writeFileSync(path.join(scriptDir, "../cli/data/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
-    fs.writeFileSync(path.join(scriptDir, "../nbt-to-mcstructure/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 4));
+    fs.writeFileSync(path.join(scriptDir, "../cli/data/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 2));
+    fs.writeFileSync(path.join(scriptDir, "../nbt-to-mcstructure/blocksJ2B.json"), JSON.stringify(blocksJ2B, null, 2));
 }
 
 main();
