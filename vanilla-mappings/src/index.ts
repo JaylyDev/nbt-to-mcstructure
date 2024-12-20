@@ -156,6 +156,7 @@ function main() {
         .set("minecraft:standing_sign", new StandingSignTypeConverter())
         .set("minecraft:slab", new SlabTypeConverter())
         .set("minecraft:stair", new StairsTypeConverter())
+        .set("minecraft:weathering_copper_slab", new SlabTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
