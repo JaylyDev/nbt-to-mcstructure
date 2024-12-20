@@ -66,3 +66,18 @@ jobs:
         shell: bash
         working-directory: './regolith-test-project'
         run: regolith run default
+
+  test_vanilla_mapping:
+    runs-on: ubuntu-latest
+    name: Mapping Generator
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+        working-directory: ./vanilla-mappings
+      - run: npm run build
+        working-directory: ./vanilla-mappings
+      - run: npm test
+        working-directory: ./vanilla-mappings

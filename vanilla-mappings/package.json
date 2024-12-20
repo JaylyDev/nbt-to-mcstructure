@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "vanilla-mappings",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "node dist/index.js"
+  },
+  "author": "JaylyMC",
+  "license": "MIT",
+  "dependencies": {
+    "@minecraft/vanilla-data": "^1.21.50"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
+  }
+}
