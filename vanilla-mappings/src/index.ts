@@ -27,6 +27,7 @@ import { WeepingVinesTypeConverter } from "./BlockTypeConverters/WeepingVines";
 import { StandingSignTypeConverter } from "./BlockTypeConverters/StandingSign";
 import { SlabTypeConverter } from "./BlockTypeConverters/Slab";
 import { StairsTypeConverter } from "./BlockTypeConverters/Stairs";
+import { TrapdoorTypeConverter } from "./BlockTypeConverters/Trapdoor";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -157,6 +158,7 @@ function main() {
         .set("minecraft:slab", new SlabTypeConverter())
         .set("minecraft:stair", new StairsTypeConverter())
         .set("minecraft:weathering_copper_slab", new SlabTypeConverter())
+        .set("minecraft:trapdoor", new TrapdoorTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
