@@ -4,7 +4,7 @@ import { ButtonTypeConverter } from "./BlockTypeConverters/Button";
 import { BlockTypeConverterBase, EmptyBlockTypeConverter } from "./BlockTypeConverters/BaseClass";
 import { DoorTypeConverter } from "./BlockTypeConverters/Door";
 import { FenceGateTypeConverter } from "./BlockTypeConverters/FenceGate";
-import { CeilingHangingSignTypeConverter } from "./BlockTypeConverters/CeilingHangingSign";
+import { CeilingHangingSignTypeConverter, WallHangingSignTypeConverter, WallSignTypeConverter } from "./BlockTypeConverters/Signs";
 import { RedstoneWireTypeConverter } from "./BlockTypeConverters/RedstoneWire";
 import { javaBlocks, bedrockBlocks, scriptDir } from "./Data/MinecraftBlocks";
 import { JavaBlock, BlockType, MojangBlocks } from "./Data/Schema";
@@ -28,6 +28,7 @@ import { StandingSignTypeConverter } from "./BlockTypeConverters/StandingSign";
 import { SlabTypeConverter } from "./BlockTypeConverters/Slab";
 import { StairsTypeConverter } from "./BlockTypeConverters/Stairs";
 import { TrapdoorTypeConverter } from "./BlockTypeConverters/Trapdoor";
+import { RailTypeConverter } from "./BlockTypeConverters/Rails";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -126,39 +127,62 @@ function main() {
         .set("minecraft:button", new ButtonTypeConverter())
         .set("minecraft:door", new DoorTypeConverter())
         .set("minecraft:fence_gate", new FenceGateTypeConverter())
+
+        .set("minecraft:standing_sign", new StandingSignTypeConverter())
+        .set("minecraft:wall_sign", new WallSignTypeConverter())
+        .set("minecraft:wall_hanging_sign", new WallHangingSignTypeConverter())
         .set("minecraft:ceiling_hanging_sign", new CeilingHangingSignTypeConverter())
+
         .set("minecraft:redstone_wire", new RedstoneWireTypeConverter())
+
         .set("minecraft:flower_pot", new FlowerPotTypeConverter())
+
         .set("minecraft:skull", new SkullTypeConverter())
+
         .set("minecraft:leaves", new LeavesTypeConverter())
+
         .set("minecraft:rotated_pillar", new RotatedPillarTypeConverter())
+
         .set("minecraft:weighted_pressure_plate", new WeightedPressurePlateTypeConverter())
         .set("minecraft:pressure_plate", new PressurePlateTypeConverter())
         .set("minecraft:bed", new BedTypeConverter())
+
         .set("minecraft:wall", new WallTypeConverter())
-        .set("minecraft:sapling", new SaplingTypeConverter())
         .set("minecraft:coral_wall_fan", new CoralWallFanTypeConverter())
         .set("minecraft:base_coral_wall_fan", new CoralWallFanTypeConverter())
+
         .set("minecraft:daylight_detector", new DaylightDetectorTypeConverter())
+
+        .set("minecraft:sapling", new SaplingTypeConverter())
         .set("minecraft:bamboo_sapling", new BambooSaplingTypeConverter())
+
         .set("minecraft:cauldron", new CauldronTypeConverter())
         .set("minecraft:lava_cauldron", new CauldronTypeConverter())
         .set("minecraft:layered_cauldron", new CauldronTypeConverter())
+
         .set("minecraft:pumpkin", new PumpkinTypeConverter())
         .set("minecraft:jack_o_lantern", new JackOLanternTypeConverter())
+
         .set("minecraft:torch", new TorchTypeConverter())
         .set("minecraft:wall_torch", new TorchTypeConverter())
+
         .set("minecraft:kelp", new KelpTypeConverter())
         .set("minecraft:kelp_plant", new KelpTypeConverter())
+
         .set("minecraft:twisting_vines", new TwistingVinesTypeConverter())
         .set("minecraft:twisting_vines_plant", new TwistingVinesTypeConverter())
         .set("minecraft:weeping_vines", new WeepingVinesTypeConverter())
         .set("minecraft:weeping_vines_plant", new WeepingVinesTypeConverter())
-        .set("minecraft:standing_sign", new StandingSignTypeConverter())
+
         .set("minecraft:slab", new SlabTypeConverter())
-        .set("minecraft:stair", new StairsTypeConverter())
         .set("minecraft:weathering_copper_slab", new SlabTypeConverter())
+
+        .set("minecraft:stair", new StairsTypeConverter())
         .set("minecraft:trapdoor", new TrapdoorTypeConverter())
+
+        .set("minecraft:rail", new RailTypeConverter())
+        .set("minecraft:detector_rail", new RailTypeConverter())
+        .set("minecraft:powered_rail", new RailTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())

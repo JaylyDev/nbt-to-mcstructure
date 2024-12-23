@@ -1,12 +1,12 @@
 import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
-import { DaylightDetectorStates } from "@minecraft/vanilla-data";
+import { DaylightDetectorInvertedStates, DaylightDetectorStates } from "@minecraft/vanilla-data";
 
 export interface JavaDaylightDetectorProperties {
     inverted: string;
     power: string;
 }
 
-export type BedrockDaylightDetectorProperties = Required<DaylightDetectorStates>;
+export type BedrockDaylightDetectorProperties = Required<DaylightDetectorStates | DaylightDetectorInvertedStates>;
 
 export class DaylightDetectorTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaDaylightDetectorProperties): BedrockBlock<BedrockDaylightDetectorProperties> {
