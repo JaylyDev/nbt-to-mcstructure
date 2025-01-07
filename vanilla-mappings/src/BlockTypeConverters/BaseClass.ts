@@ -37,7 +37,8 @@ export const blockIdsMap = new Map<string, string>()
     .set("minecraft:snow_block", "minecraft:snow")
     .set("minecraft:spawner", "minecraft:mob_spawner")
     .set("minecraft:waxed_copper_block", "minecraft:waxed_copper")
-    .set("minecraft:terracotta", "minecraft:hardened_clay");
+    .set("minecraft:terracotta", "minecraft:hardened_clay")
+    .set("minecraft:moving_piston", "minecraft:moving_block");
 
 // List of bedrock blocks that have been officially made unobtainable.
 const unobtainableBlocks = new Set<string>()
@@ -48,7 +49,8 @@ const unobtainableBlocks = new Set<string>()
     .add("minecraft:reserved6")
     .add("minecraft:stonecutter")
     .add("minecraft:netherreactor")
-    .add("minecraft:end_gateway");
+    .add("minecraft:end_gateway")
+    .add("minecraft:moving_block");
 
 export interface BedrockBlock<T extends object = object> {
     name: string;

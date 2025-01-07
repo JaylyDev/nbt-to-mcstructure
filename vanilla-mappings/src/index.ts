@@ -4,12 +4,12 @@ import { ButtonTypeConverter } from "./BlockTypeConverters/Button";
 import { BlockTypeConverterBase, EmptyBlockTypeConverter } from "./BlockTypeConverters/BaseClass";
 import { DoorTypeConverter } from "./BlockTypeConverters/Door";
 import { FenceGateTypeConverter } from "./BlockTypeConverters/FenceGate";
-import { CeilingHangingSignTypeConverter, WallHangingSignTypeConverter, WallSignTypeConverter } from "./BlockTypeConverters/Signs";
+import { CeilingHangingSignTypeConverter, StandingSignTypeConverter, WallHangingSignTypeConverter, WallSignTypeConverter } from "./BlockTypeConverters/Signs";
 import { RedstoneWireTypeConverter } from "./BlockTypeConverters/RedstoneWire";
 import { javaBlocks, bedrockBlocks, scriptDir } from "./Data/MinecraftBlocks";
 import { JavaBlock, BlockType, MojangBlocks } from "./Data/Schema";
 import { FlowerPotTypeConverter } from "./BlockTypeConverters/FlowerPot";
-import { SkullTypeConverter } from "./BlockTypeConverters/Skull";
+import { SkullTypeConverter, WallSkullTypeConverter } from "./BlockTypeConverters/Skull";
 import { LeavesTypeConverter } from "./BlockTypeConverters/Leaves";
 import { RotatedPillarTypeConverter } from "./BlockTypeConverters/RotatedPillar";
 import { WeightedPressurePlateTypeConverter, PressurePlateTypeConverter } from "./BlockTypeConverters/PressurePlate";
@@ -24,11 +24,13 @@ import { JackOLanternTypeConverter, PumpkinTypeConverter } from "./BlockTypeConv
 import { TorchTypeConverter } from "./BlockTypeConverters/Torch";
 import { TwistingVinesTypeConverter } from "./BlockTypeConverters/TwistingVines";
 import { WeepingVinesTypeConverter } from "./BlockTypeConverters/WeepingVines";
-import { StandingSignTypeConverter } from "./BlockTypeConverters/StandingSign";
 import { SlabTypeConverter } from "./BlockTypeConverters/Slab";
 import { StairsTypeConverter } from "./BlockTypeConverters/Stairs";
 import { TrapdoorTypeConverter } from "./BlockTypeConverters/Trapdoor";
 import { RailTypeConverter } from "./BlockTypeConverters/Rails";
+import { AmethystClusterTypeConverter } from "./BlockTypeConverters/AmethystCluster";
+import { AnvilTypeConverter } from "./BlockTypeConverters/Anvil";
+import { PistonTypeConverter } from "./BlockTypeConverters/Pistons";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -88,7 +90,7 @@ function createBlocksJ2B(
                 const bedrockBlock = blockTypeConverter.convert(blockId, state.properties);
 
                 if (!bedrockBlocks.data_items.find((item) => item.name === bedrockBlock.name)) {
-                    console.error(`[BlockJ2B] No bedrock block found for block id '${blockId}'`);
+                    console.error(`[BlockJ2B] No bedrock block found for block id '${blockId}' (${definition.type}, ${blockTypeConverter.constructor.name})`);
                     continue;
                 }
 
@@ -138,6 +140,11 @@ function main() {
         .set("minecraft:flower_pot", new FlowerPotTypeConverter())
 
         .set("minecraft:skull", new SkullTypeConverter())
+        .set("minecraft:player_head", new SkullTypeConverter())
+        .set("minecraft:wall_skull", new WallSkullTypeConverter())
+        .set("minecraft:piglinwallskull", new WallSkullTypeConverter())
+        .set("minecraft:player_wall_head", new WallSkullTypeConverter())
+        .set("minecraft:wither_wall_skull", new WallSkullTypeConverter())
 
         .set("minecraft:leaves", new LeavesTypeConverter())
 
@@ -165,6 +172,7 @@ function main() {
 
         .set("minecraft:torch", new TorchTypeConverter())
         .set("minecraft:wall_torch", new TorchTypeConverter())
+        .set("minecraft:redstone_wall_torch", new TorchTypeConverter())
 
         .set("minecraft:kelp", new KelpTypeConverter())
         .set("minecraft:kelp_plant", new KelpTypeConverter())
@@ -183,6 +191,14 @@ function main() {
         .set("minecraft:rail", new RailTypeConverter())
         .set("minecraft:detector_rail", new RailTypeConverter())
         .set("minecraft:powered_rail", new RailTypeConverter())
+
+        .set("minecraft:amethyst_cluster", new AmethystClusterTypeConverter())
+
+        .set("minecraft:anvil", new AnvilTypeConverter())
+
+        .set("minecraft:moving_piston", new EmptyBlockTypeConverter())
+        .set("minecraft:piston_base", new PistonTypeConverter())
+        .set("minecraft:piston_head", new PistonTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())

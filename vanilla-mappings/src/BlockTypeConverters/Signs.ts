@@ -1,9 +1,13 @@
 import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
-import { AcaciaHangingSignStates, OakHangingSignStates, WallSignStates } from "@minecraft/vanilla-data";
+import { AcaciaHangingSignStates, OakHangingSignStates, StandingSignStates, WallSignStates } from "@minecraft/vanilla-data";
 
-const signsMap = new Map<string, string>()
+const wallSignsMap = new Map<string, string>()
     .set("minecraft:dark_oak_wall_sign", "minecraft:darkoak_wall_sign")
     .set("minecraft:oak_wall_sign", "minecraft:wall_sign");
+
+const standingSignsMap = new Map<string, string>()
+    .set("minecraft:dark_oak_sign", "minecraft:darkoak_standing_sign")
+    .set("minecraft:oak_sign", "minecraft:standing_sign");
 
 export interface JavaCeilingHangingSignProperties {
     attached: string; // true, false
@@ -16,11 +20,17 @@ export interface JavaWallSignProperties {
     waterlogged: string;
 }
 
+export interface JavaStandingSignProperties {
+    rotation: string; // 0-15
+    waterlogged: string;
+}
+
 export interface JavaWallHangingSignProperties extends JavaWallSignProperties {}
 
 export type BedrockCeilingHangingSignProperties = Required<AcaciaHangingSignStates>;
 export type BedrockWallHangingSignProperties = Required<OakHangingSignStates>;
 export type BedrockWallSignProperties = Required<WallSignStates>;
+export type BedrockStandingSignProperties = Required<StandingSignStates>;
 
 export class CeilingHangingSignTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaCeilingHangingSignProperties): BedrockBlock<BedrockCeilingHangingSignProperties> {
@@ -118,11 +128,22 @@ export class WallSignTypeConverter extends BlockTypeConverterBase {
             states.facing_direction = 5;
         }
 
-        const bedrockId = signsMap.get(id) ?? id;
+        const bedrockId = wallSignsMap.get(id) ?? id;
 
         return {
             name: bedrockId,
             properties: states,
         };
+    }
+}
+
+export class StandingSignTypeConverter extends BlockTypeConverterBase {
+    public convert(id: string, properties: JavaStandingSignProperties): BedrockBlock<BedrockStandingSignProperties> {
+        const states: BedrockStandingSignProperties = {
+            ground_sign_direction: parseInt(properties.rotation),
+        };
+
+        const bedrockId = standingSignsMap.get(id) ?? id.replace("_sign", "_standing_sign");
+        return { name: bedrockId, properties: states };
     }
 }

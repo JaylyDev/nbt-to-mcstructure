@@ -25,6 +25,12 @@ export class LeavesTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
+        if (id === "minecraft:flowering_azalea_leaves") {
+            return {
+                name: "minecraft:flowering_azalea",
+                properties: states,
+            };
+        }
         return { name: id, properties: states };
     }
 }

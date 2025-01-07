@@ -54,6 +54,11 @@ export class StairsTypeConverter extends BlockTypeConverterBase {
                 name: "minecraft:prismarine_bricks_stairs",
                 properties: states,
             };
+        } else if (id === "minecraft:end_stone_brick_stairs") {
+            return {
+                name: "minecraft:end_brick_stairs",
+                properties: states,
+            };
         } else {
             return {
                 name: id,
