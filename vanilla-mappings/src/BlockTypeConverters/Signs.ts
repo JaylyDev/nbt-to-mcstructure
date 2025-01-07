@@ -1,6 +1,10 @@
 import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
 import { AcaciaHangingSignStates, OakHangingSignStates, WallSignStates } from "@minecraft/vanilla-data";
 
+const signsMap = new Map<string, string>()
+    .set("minecraft:dark_oak_wall_sign", "minecraft:darkoak_wall_sign")
+    .set("minecraft:oak_wall_sign", "minecraft:wall_sign");
+
 export interface JavaCeilingHangingSignProperties {
     attached: string; // true, false
     rotation: string; // 0-15
@@ -114,8 +118,10 @@ export class WallSignTypeConverter extends BlockTypeConverterBase {
             states.facing_direction = 5;
         }
 
+        const bedrockId = signsMap.get(id) ?? id;
+
         return {
-            name: id,
+            name: bedrockId,
             properties: states,
         };
     }

@@ -27,7 +27,11 @@ export class PressurePlateTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return { name: id, properties: states };
+        if (id === "minecraft:oak_pressure_plate") {
+            return { name: "minecraft:wooden_pressure_plate", properties: states };
+        } else {
+            return { name: id, properties: states };
+        }
     }
 }
 

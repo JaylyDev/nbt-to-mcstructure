@@ -49,6 +49,10 @@ export class FenceGateTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return { name: id, properties: states };
+        if (id === "minecraft:oak_fence_gate") {
+            return { name: "minecraft:fence_gate", properties: states };
+        } else {
+            return { name: id, properties: states };
+        }
     }
 }

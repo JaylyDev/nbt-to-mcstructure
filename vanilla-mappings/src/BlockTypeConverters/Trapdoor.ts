@@ -52,6 +52,10 @@ export class TrapdoorTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return { name: id, properties: states };
+        if (id === "minecraft:oak_trapdoor") {
+            return { name: "minecraft:trapdoor", properties: states };
+        } else {
+            return { name: id, properties: states };
+        }
     }
 }

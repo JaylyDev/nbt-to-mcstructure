@@ -59,6 +59,10 @@ export class DoorTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return { name: id, properties: states };
+        if (id === "minecraft:oak_door") {
+            return { name: "minecraft:wooden_door", properties: states };
+        } else {
+            return { name: id, properties: states };
+        }
     }
 }

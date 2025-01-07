@@ -1,5 +1,5 @@
 import { BedrockBlock, BlockTypeConverterBase } from "./BaseClass";
-import { OakStairsStates } from "@minecraft/vanilla-data";
+import { OakStairsStates, StoneStairsStates } from "@minecraft/vanilla-data";
 
 export interface JavaStairsProperties {
     facing: "north" | "south" | "west" | "east";
@@ -9,7 +9,7 @@ export interface JavaStairsProperties {
 }
 
 // vertical_half: bottom (default) or top
-export type BedrockStairsProperties = Required<OakStairsStates>;
+export type BedrockStairsProperties = Required<OakStairsStates | StoneStairsStates>;
 
 export class StairsTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaStairsProperties): BedrockBlock<BedrockStairsProperties> {
@@ -44,9 +44,21 @@ export class StairsTypeConverter extends BlockTypeConverterBase {
                 break;
         }
 
-        return {
-            name: id,
-            properties: states,
-        };
+        if (id === "minecraft:cobblestone_stairs") {
+            return {
+                name: "minecraft:stone_stairs",
+                properties: states,
+            };
+        } else if (id === "minecraft:prismarine_brick_stairs") {
+            return {
+                name: "minecraft:prismarine_bricks_stairs",
+                properties: states,
+            };
+        } else {
+            return {
+                name: id,
+                properties: states,
+            };
+        }
     }
 }

@@ -40,9 +40,10 @@ export class ButtonTypeConverter extends BlockTypeConverterBase {
             }
         }
 
-        return {
-            name: id,
-            properties: states,
-        };
+        if (id === "minecraft:oak_button") {
+            return { name: "minecraft:wooden_button", properties: states };
+        } else {
+            return { name: id, properties: states };
+        }
     }
 }
