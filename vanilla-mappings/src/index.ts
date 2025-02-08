@@ -31,6 +31,9 @@ import { RailTypeConverter } from "./BlockTypeConverters/Rails";
 import { AmethystClusterTypeConverter } from "./BlockTypeConverters/AmethystCluster";
 import { AnvilTypeConverter } from "./BlockTypeConverters/Anvil";
 import { PistonTypeConverter } from "./BlockTypeConverters/Pistons";
+import { BaseCoralFanTypeConverter } from "./BlockTypeConverters/BaseCoralFan";
+import { AttachedStemTypeConverter } from "./BlockTypeConverters/AttachedStem";
+import { BambooStalkTypeConverter } from "./BlockTypeConverters/Bamboo";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -199,6 +202,12 @@ function main() {
         .set("minecraft:moving_piston", new EmptyBlockTypeConverter())
         .set("minecraft:piston_base", new PistonTypeConverter())
         .set("minecraft:piston_head", new PistonTypeConverter())
+
+        .set("minecraft:base_coral_fan", new BaseCoralFanTypeConverter())
+
+        .set("minecraft:attached_stem", new AttachedStemTypeConverter())
+
+        .set("minecraft:bamboo_stalk", new BambooStalkTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())
