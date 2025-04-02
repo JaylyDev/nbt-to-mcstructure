@@ -31,6 +31,116 @@ import { RailTypeConverter } from "./BlockTypeConverters/Rails";
 import { AmethystClusterTypeConverter } from "./BlockTypeConverters/AmethystCluster";
 import { AnvilTypeConverter } from "./BlockTypeConverters/Anvil";
 import { PistonTypeConverter } from "./BlockTypeConverters/Pistons";
+import { BaseCoralFanTypeConverter } from "./BlockTypeConverters/BaseCoralFan";
+import { AttachedStemTypeConverter } from "./BlockTypeConverters/AttachedStem";
+import { BambooStalkTypeConverter } from "./BlockTypeConverters/Bamboo";
+import { BannerTypeConverter } from "./BlockTypeConverters/Banner";
+import { BarrelTypeConverter } from "./BlockTypeConverters/Barrel";
+import { BeehiveTypeConverter } from "./BlockTypeConverters/Beehive";
+import { BeetrootTypeConverter } from "./BlockTypeConverters/Beetroot";
+import { BellTypeConverter } from "./BlockTypeConverters/Bell";
+import { BigDripleafTypeConverter } from "./BlockTypeConverters/BigDripleaf";
+import { BigDripleafStemTypeConverter } from "./BlockTypeConverters/BigDripleafStem";
+import { BlastFurnaceTypeConverter } from "./BlockTypeConverters/BlastFurnace";
+import { BrewingStandTypeConverter } from "./BlockTypeConverters/BrewingStand";
+import { BrushableTypeConverter } from "./BlockTypeConverters/Brushable";
+import { BubbleColumnTypeConverter } from "./BlockTypeConverters/BubbleColumn";
+import { CactusTypeConverter } from "./BlockTypeConverters/Cactus";
+import { CakeTypeConverter } from "./BlockTypeConverters/Cake";
+import { CalibratedSculkSensorTypeConverter } from "./BlockTypeConverters/CalibratedSculkSensor";
+import { CampfireTypeConverter } from "./BlockTypeConverters/Campfire";
+import { CandleTypeConverter } from "./BlockTypeConverters/Candle";
+import { CandleCakeTypeConverter } from "./BlockTypeConverters/CandleCake";
+import { CarrotTypeConverter } from "./BlockTypeConverters/Carrot";
+import { CaveVinesTypeConverter } from "./BlockTypeConverters/CaveVines";
+import { CaveVinesPlantTypeConverter } from "./BlockTypeConverters/CaveVinesPlant";
+import { ChainTypeConverter } from "./BlockTypeConverters/Chain";
+import { ChestTypeConverter } from "./BlockTypeConverters/Chest";
+import { ChiseledBookShelfTypeConverter } from "./BlockTypeConverters/ChiseledBookShelf";
+import { ChorusFlowerTypeConverter } from "./BlockTypeConverters/ChorusFlower";
+import { CocoaTypeConverter } from "./BlockTypeConverters/Cocoa";
+import { CommandTypeConverter } from "./BlockTypeConverters/Command";
+import { ComparatorTypeConverter } from "./BlockTypeConverters/Comparator";
+import { ComposterTypeConverter } from "./BlockTypeConverters/Composter";
+import { CopperBulbBlockTypeConverter } from "./BlockTypeConverters/CopperBulbBlock";
+import { CoralFanTypeConverter } from "./BlockTypeConverters/CoralFan";
+import { CrafterTypeConverter } from "./BlockTypeConverters/Crafter";
+import { CreakingHeartTypeConverter } from "./BlockTypeConverters/CreakingHeart";
+import { CropTypeConverter } from "./BlockTypeConverters/Crop";
+import { DecoratedPotTypeConverter } from "./BlockTypeConverters/DecoratedPot";
+import { DispenserTypeConverter } from "./BlockTypeConverters/Dispenser";
+import { DoublePlantTypeConverter } from "./BlockTypeConverters/DoublePlant";
+import { DropperTypeConverter } from "./BlockTypeConverters/Dropper";
+import { EnderChestTypeConverter } from "./BlockTypeConverters/EnderChest";
+import { EndPortalFrameTypeConverter } from "./BlockTypeConverters/EndPortalFrame";
+import { EndRodTypeConverter } from "./BlockTypeConverters/EndRod";
+import { FarmTypeConverter } from "./BlockTypeConverters/Farm";
+import { FireTypeConverter } from "./BlockTypeConverters/Fire";
+import { FrostedIceTypeConverter } from "./BlockTypeConverters/FrostedIce";
+import { FurnaceTypeConverter } from "./BlockTypeConverters/Furnace";
+import { GlazedTerracottaTypeConverter } from "./BlockTypeConverters/GlazedTerracotta";
+import { GlowLichenTypeConverter } from "./BlockTypeConverters/GlowLichen";
+import { GrindstoneTypeConverter } from "./BlockTypeConverters/Grindstone";
+import { HangingMossTypeConverter } from "./BlockTypeConverters/HangingMoss";
+import { HayTypeConverter } from "./BlockTypeConverters/Hay";
+import { HopperTypeConverter } from "./BlockTypeConverters/Hopper";
+import { HugeMushroomTypeConverter } from "./BlockTypeConverters/HugeMushroom";
+import { InfestedRotatedPillarTypeConverter } from "./BlockTypeConverters/InfestedRotatedPillar";
+import { JigsawTypeConverter } from "./BlockTypeConverters/Jigsaw";
+import { LadderTypeConverter } from "./BlockTypeConverters/Ladder";
+import { LanternTypeConverter } from "./BlockTypeConverters/Lantern";
+import { LecternTypeConverter } from "./BlockTypeConverters/Lectern";
+import { LeverTypeConverter } from "./BlockTypeConverters/Lever";
+import { LightTypeConverter } from "./BlockTypeConverters/Light";
+import { LightningRodTypeConverter } from "./BlockTypeConverters/LightningRod";
+import { LiquidTypeConverter } from "./BlockTypeConverters/Liquid";
+import { LoomTypeConverter } from "./BlockTypeConverters/Loom";
+import { MangroveLeavesTypeConverter } from "./BlockTypeConverters/MangroveLeaves";
+import { MangrovePropaguleTypeConverter } from "./BlockTypeConverters/MangrovePropagule";
+import { MossyCarpetTypeConverter } from "./BlockTypeConverters/MossyCarpet";
+import { MultifaceTypeConverter } from "./BlockTypeConverters/Multiface";
+import { NetherPortalTypeConverter } from "./BlockTypeConverters/NetherPortal";
+import { NetherWartTypeConverter } from "./BlockTypeConverters/NetherWart";
+import { ObserverTypeConverter } from "./BlockTypeConverters/Observer";
+import { ParticleLeavesTypeConverter } from "./BlockTypeConverters/ParticleLeaves";
+import { PinkPetalsTypeConverter } from "./BlockTypeConverters/PinkPetals";
+import { PitcherCropTypeConverter } from "./BlockTypeConverters/PitcherCrop";
+import { PointedDripstoneTypeConverter } from "./BlockTypeConverters/PointedDripstone";
+import { PotatoTypeConverter } from "./BlockTypeConverters/Potato";
+import { RedstoneTorchTypeConverter } from "./BlockTypeConverters/RedstoneTorch";
+import { RepeaterTypeConverter } from "./BlockTypeConverters/Repeater";
+import { RespawnAnchorTypeConverter } from "./BlockTypeConverters/RespawnAnchor";
+import { ScaffoldingTypeConverter } from "./BlockTypeConverters/Scaffolding";
+import { SculkCatalystTypeConverter } from "./BlockTypeConverters/SculkCatalyst";
+import { SculkSensorTypeConverter } from "./BlockTypeConverters/SculkSensor";
+import { SculkShriekerTypeConverter } from "./BlockTypeConverters/SculkShrieker";
+import { SculkVeinTypeConverter } from "./BlockTypeConverters/SculkVein";
+import { SeaPickleTypeConverter } from "./BlockTypeConverters/SeaPickle";
+import { SmallDripleafTypeConverter } from "./BlockTypeConverters/SmallDripleaf";
+import { SmokerTypeConverter } from "./BlockTypeConverters/Smoker";
+import { SnifferEggTypeConverter } from "./BlockTypeConverters/SnifferEgg";
+import { StemTypeConverter } from "./BlockTypeConverters/Stem";
+import { StonecutterTypeConverter } from "./BlockTypeConverters/Stonecutter";
+import { StructureTypeConverter } from "./BlockTypeConverters/Structure";
+import { SugarCaneTypeConverter } from "./BlockTypeConverters/SugarCane";
+import { SweetBerryBushTypeConverter } from "./BlockTypeConverters/SweetBerryBush";
+import { TallFlowerTypeConverter } from "./BlockTypeConverters/TallFlower";
+import { TallSeagrassTypeConverter } from "./BlockTypeConverters/TallSeagrass";
+import { TntTypeConverter } from "./BlockTypeConverters/Tnt";
+import { TorchflowerCropTypeConverter } from "./BlockTypeConverters/TorchflowerCrop";
+import { TrappedChestTypeConverter } from "./BlockTypeConverters/TrappedChest";
+import { TrialSpawnerTypeConverter } from "./BlockTypeConverters/TrialSpawner";
+import { TripwireTypeConverter } from "./BlockTypeConverters/Tripwire";
+import { TripWireHookTypeConverter } from "./BlockTypeConverters/TripWireHook";
+import { TurtleEggTypeConverter } from "./BlockTypeConverters/TurtleEgg";
+import { VaultTypeConverter } from "./BlockTypeConverters/Vault";
+import { VineTypeConverter } from "./BlockTypeConverters/Vine";
+import { WallBannerTypeConverter } from "./BlockTypeConverters/WallBanner";
+import { WeatheringCopperBulbTypeConverter } from "./BlockTypeConverters/WeatheringCopperBulb";
+import { WeatheringCopperDoorTypeConverter } from "./BlockTypeConverters/WeatheringCopperDoor";
+import { WeatheringCopperStairTypeConverter } from "./BlockTypeConverters/WeatheringCopperStair";
+import { WeatheringCopperTrapDoorTypeConverter } from "./BlockTypeConverters/WeatheringCopperTrapDoor";
+import { WitherSkullTypeConverter } from "./BlockTypeConverters/WitherSkull";
 
 function getJavaBlockTypes(javaBlocks: Record<string, JavaBlock>): Record<string, BlockType> {
     const blockTypes: Record<string, BlockType> = {};
@@ -199,6 +309,119 @@ function main() {
         .set("minecraft:moving_piston", new EmptyBlockTypeConverter())
         .set("minecraft:piston_base", new PistonTypeConverter())
         .set("minecraft:piston_head", new PistonTypeConverter())
+
+        .set("minecraft:base_coral_fan", new BaseCoralFanTypeConverter())
+
+        .set("minecraft:attached_stem", new AttachedStemTypeConverter())
+
+        .set("minecraft:bamboo_stalk", new BambooStalkTypeConverter())
+        .set("minecraft:barrel", new BarrelTypeConverter())
+        .set("minecraft:beehive", new BeehiveTypeConverter())
+        .set("minecraft:beetroot", new BeetrootTypeConverter())
+        .set("minecraft:bell", new BellTypeConverter())
+        .set("minecraft:big_dripleaf", new BigDripleafTypeConverter())
+        .set("minecraft:big_dripleaf_stem", new BigDripleafStemTypeConverter())
+        .set("minecraft:banner", new BannerTypeConverter())
+        .set("minecraft:candle", new CandleTypeConverter())
+        .set("minecraft:candle_cake", new CandleCakeTypeConverter())
+        .set("minecraft:glazed_terracotta", new GlazedTerracottaTypeConverter())
+        .set("minecraft:wall_banner", new WallBannerTypeConverter())
+        .set("minecraft:blast_furnace", new BlastFurnaceTypeConverter())
+        .set("minecraft:coral_fan", new CoralFanTypeConverter())
+        .set("minecraft:brewing_stand", new BrewingStandTypeConverter())
+        .set("minecraft:huge_mushroom", new HugeMushroomTypeConverter())
+        .set("minecraft:bubble_column", new BubbleColumnTypeConverter())
+        .set("minecraft:cactus", new CactusTypeConverter())
+        .set("minecraft:cake", new CakeTypeConverter())
+        .set("minecraft:calibrated_sculk_sensor", new CalibratedSculkSensorTypeConverter())
+        .set("minecraft:campfire", new CampfireTypeConverter())
+        .set("minecraft:carrot", new CarrotTypeConverter())
+        .set("minecraft:cave_vines", new CaveVinesTypeConverter())
+        .set("minecraft:cave_vines_plant", new CaveVinesPlantTypeConverter())
+        .set("minecraft:chain", new ChainTypeConverter())
+        .set("minecraft:command", new CommandTypeConverter())
+        .set("minecraft:particle_leaves", new ParticleLeavesTypeConverter())
+        .set("minecraft:chest", new ChestTypeConverter())
+        .set("minecraft:chiseled_book_shelf", new ChiseledBookShelfTypeConverter())
+        .set("minecraft:chorus_flower", new ChorusFlowerTypeConverter())
+        .set("minecraft:cocoa", new CocoaTypeConverter())
+        .set("minecraft:comparator", new ComparatorTypeConverter())
+        .set("minecraft:composter", new ComposterTypeConverter())
+        .set("minecraft:weathering_copper_bulb", new WeatheringCopperBulbTypeConverter())
+        .set("minecraft:weathering_copper_door", new WeatheringCopperDoorTypeConverter())
+        .set("minecraft:weathering_copper_trap_door", new WeatheringCopperTrapDoorTypeConverter())
+        .set("minecraft:crafter", new CrafterTypeConverter())
+        .set("minecraft:creaking_heart", new CreakingHeartTypeConverter())
+        .set("minecraft:weathering_copper_stair", new WeatheringCopperStairTypeConverter())
+        .set("minecraft:decorated_pot", new DecoratedPotTypeConverter())
+        .set("minecraft:dispenser", new DispenserTypeConverter())
+        .set("minecraft:dropper", new DropperTypeConverter())
+        .set("minecraft:end_portal_frame", new EndPortalFrameTypeConverter())
+        .set("minecraft:end_rod", new EndRodTypeConverter())
+        .set("minecraft:ender_chest", new EnderChestTypeConverter())
+        .set("minecraft:farm", new FarmTypeConverter())
+        .set("minecraft:fire", new FireTypeConverter())
+        .set("minecraft:frosted_ice", new FrostedIceTypeConverter())
+        .set("minecraft:furnace", new FurnaceTypeConverter())
+        .set("minecraft:glow_lichen", new GlowLichenTypeConverter())
+        .set("minecraft:grindstone", new GrindstoneTypeConverter())
+        .set("minecraft:hay", new HayTypeConverter())
+        .set("minecraft:hopper", new HopperTypeConverter())
+        .set("minecraft:infested_rotated_pillar", new InfestedRotatedPillarTypeConverter())
+        .set("minecraft:jigsaw", new JigsawTypeConverter())
+        .set("minecraft:ladder", new LadderTypeConverter())
+        .set("minecraft:lantern", new LanternTypeConverter())
+        .set("minecraft:double_plant", new DoublePlantTypeConverter())
+        .set("minecraft:liquid", new LiquidTypeConverter())
+        .set("minecraft:lectern", new LecternTypeConverter())
+        .set("minecraft:lever", new LeverTypeConverter())
+        .set("minecraft:light", new LightTypeConverter())
+        .set("minecraft:lightning_rod", new LightningRodTypeConverter())
+        .set("minecraft:tall_flower", new TallFlowerTypeConverter())
+        .set("minecraft:loom", new LoomTypeConverter())
+        .set("minecraft:mangrove_leaves", new MangroveLeavesTypeConverter())
+        .set("minecraft:mangrove_propagule", new MangrovePropaguleTypeConverter())
+        .set("minecraft:stem", new StemTypeConverter())
+        .set("minecraft:nether_portal", new NetherPortalTypeConverter())
+        .set("minecraft:nether_wart", new NetherWartTypeConverter())
+        .set("minecraft:observer", new ObserverTypeConverter())
+        .set("minecraft:hanging_moss", new HangingMossTypeConverter())
+        .set("minecraft:mossy_carpet", new MossyCarpetTypeConverter())
+        .set("minecraft:pink_petals", new PinkPetalsTypeConverter())
+        .set("minecraft:pitcher_crop", new PitcherCropTypeConverter())
+        .set("minecraft:pointed_dripstone", new PointedDripstoneTypeConverter())
+        .set("minecraft:potato", new PotatoTypeConverter())
+        .set("minecraft:redstone_torch", new RedstoneTorchTypeConverter())
+        .set("minecraft:repeater", new RepeaterTypeConverter())
+        .set("minecraft:multiface", new MultifaceTypeConverter())
+        .set("minecraft:respawn_anchor", new RespawnAnchorTypeConverter())
+        .set("minecraft:scaffolding", new ScaffoldingTypeConverter())
+        .set("minecraft:sculk_catalyst", new SculkCatalystTypeConverter())
+        .set("minecraft:sculk_sensor", new SculkSensorTypeConverter())
+        .set("minecraft:sculk_shrieker", new SculkShriekerTypeConverter())
+        .set("minecraft:sculk_vein", new SculkVeinTypeConverter())
+        .set("minecraft:sea_pickle", new SeaPickleTypeConverter())
+        .set("minecraft:small_dripleaf", new SmallDripleafTypeConverter())
+        .set("minecraft:smoker", new SmokerTypeConverter())
+        .set("minecraft:sniffer_egg", new SnifferEggTypeConverter())
+        .set("minecraft:stonecutter", new StonecutterTypeConverter())
+        .set("minecraft:structure", new StructureTypeConverter())
+        .set("minecraft:sugar_cane", new SugarCaneTypeConverter())
+        .set("minecraft:brushable", new BrushableTypeConverter())
+        .set("minecraft:sweet_berry_bush", new SweetBerryBushTypeConverter())
+        .set("minecraft:tall_seagrass", new TallSeagrassTypeConverter())
+        .set("minecraft:tnt", new TntTypeConverter())
+        .set("minecraft:torchflower_crop", new TorchflowerCropTypeConverter())
+        .set("minecraft:trapped_chest", new TrappedChestTypeConverter())
+        .set("minecraft:trial_spawner", new TrialSpawnerTypeConverter())
+        .set("minecraft:tripwire", new TripwireTypeConverter())
+        .set("minecraft:trip_wire_hook", new TripWireHookTypeConverter())
+        .set("minecraft:turtle_egg", new TurtleEggTypeConverter())
+        .set("minecraft:vault", new VaultTypeConverter())
+        .set("minecraft:vine", new VineTypeConverter())
+        .set("minecraft:copper_bulb_block", new CopperBulbBlockTypeConverter())
+        .set("minecraft:crop", new CropTypeConverter())
+        .set("minecraft:wither_skull", new WitherSkullTypeConverter())
 
         // Following bedrock blocks has zero block properties, skipping.
         .set("minecraft:fence", new EmptyBlockTypeConverter())

@@ -25,6 +25,7 @@ export class JackOLanternTypeConverter extends BlockTypeConverterBase {
         const states: BedrockJackOLanternProperties = {
             "minecraft:cardinal_direction": properties.facing,
         };
-        return { name: id, properties: states };
+        if (id === "minecraft:jack_o_lantern") return { name: "minecraft:lit_pumpkin", properties: states };
+        else return { name: id, properties: states };
     }
 }
