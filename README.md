@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="./README.md">English</a> |
+  <a href="./README_zh.md">简体中文</a>
+</p>
+
 # nbt-to-mcstructure
  Converts Java .nbt files to Bedrock .mcstructure files
 

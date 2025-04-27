@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="./README.md">English</a> |
+  <a href="./README_zh.md">简体中文</a>
+</p>
+
 # nbt-to-mcstructure
 将 Java 版本的 `.nbt` 文件转换为基岩版的 `.mcstructure` 文件
 
