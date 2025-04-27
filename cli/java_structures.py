@@ -48,7 +48,7 @@ def getItems(items):
     for index in range(len(items)):
         itemsList.append(
             {
-                "Count": TAG_Byte(items[index].get("Count").value),
+                "Count": TAG_Byte(items[index].get("count").value),
                 "Damage": TAG_Short(0),
                 "Name": TAG_String(items[index].get("id").value),
                 "Slot": TAG_Byte(items[index].get("Slot").value),
@@ -172,6 +172,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
     blocks: TAG_List = structure["blocks"].value
     palette: TAG_List = structure["palette"].value
     oldsize: TAG_List = structure["size"].value
+    entities: TAG_List = structure["entities"].value
     size: int = oldsize[0].value * oldsize[1].value * oldsize[2].value
 
     newBlocks = []
@@ -232,13 +233,14 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
         newPalette.append(getBlockObject("minecraft:water[liquid_depth=0]", "bedrock"))
     print(f"Finished applying palette in {round((time() - startTime) * 1000, 2)} ms")
 
+    startTime = time()
     block_position_data = {}
 
-    for index, entry in enumerate(newBlocks):
+    for index, entry in enumerate(track(newBlocks,description="[green]Applying block entity")):
         if entry != -1:
-            block = checkEntry(blocks, entry)
             match newPalette[entry]["name"].value:
                 case "minecraft:bed":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Bed"
                     )
@@ -247,6 +249,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:brewing_stand":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "BrewingStand"
                     )
@@ -260,6 +263,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:chest" | "minecraft:trapped_chest" | "minecraft:barrel":
+                    block = checkEntry(blocks, entry)
                     if newPalette[entry]["name"].value == "minecraft:barrel":
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Barrel"
@@ -291,6 +295,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         )
                     continue
                 case "minecraft:comparator":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Comparator"
                     )
@@ -299,10 +304,14 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:flower_pot":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "FlowerPot"
                     )
-                    potted_plant = palette[block["state"].value]["Name"].value[17:]
+                    if "azalea" in palette[block["state"].value]["Name"].value:
+                        potted_plant = palette[block["state"].value]["Name"].value[17:-5]
+                    else:
+                        potted_plant = palette[block["state"].value]["Name"].value[17:]
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
                             "PlantBlock": TAG_Compound(
@@ -311,12 +320,13 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         }
                     )
                     continue
-                case "minecraft:furnace" | "minecraft:blast_furnace" | "minecraft:smoker":
-                    if newPalette[entry]["name"].value == "minecraft:furnace":
+                case "minecraft:furnace" | "minecraft:lit_furnace" | "minecraft:blast_furnace" | "minecraft:lit_blast_furnace" | "minecraft:smoker" | "minecraft:lit_smoker":
+                    block = checkEntry(blocks, entry)
+                    if newPalette[entry]["name"].value in ["minecraft:furnace", "minecraft:lit_furnace"]:
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Furnace"
                         )
-                    elif newPalette[entry]["name"].value == "minecraft:blast_furnace":
+                    elif newPalette[entry]["name"].value in ["minecraft:blast_furnace", "minecraft:lit_blast_furnace"]:
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "BlastFurnace"
                         )
@@ -324,13 +334,12 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Smoker"
                         )
-
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
-                            "BurnTime": TAG_Short(block["nbt"]["BurnTime"].value),
-                            "CookTime": TAG_Short(block["nbt"]["CookTime"].value),
+                            "BurnTime": TAG_Short(block["nbt"]["lit_time_remaining"].value),
+                            "CookTime": TAG_Short(block["nbt"]["cooking_time_spent"].value),
                             "BurnDuration": TAG_Short(
-                                block["nbt"]["CookTimeTotal"].value
+                                block["nbt"]["lit_total_time"].value
                             ),
                             "Items": TAG_List(
                                 TAG_Compound, getItems(block["nbt"]["Items"])
@@ -338,7 +347,30 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         }
                     )
                     continue
+                case "minecraft:standing_banner" | "minecraft:wall_banner":
+                    block = checkEntry(blocks, entry)
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "Banner"
+                    )
+                    patterns_data = {"Patterns": []}
+                    if "patterns" in block["nbt"]:
+                        for pattern in block["nbt"]["patterns"]:
+                            pattern_data = {
+                                "Color": TAG_Int(banner_color(pattern["color"].value)),
+                                "Pattern": TAG_String(banner_pattern(pattern["pattern"].value))
+                            }
+                            patterns_data["Patterns"].append(pattern_data)
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "Base": TAG_Int(banner_base(palette[entry]["Name"].value)),
+                            "Patterns": TAG_List(TAG_Compound, patterns_data["Patterns"]),
+                            "Type": TAG_Int(0),
+                            "id": TAG_String("Banner"),
+                            "isMoveable": TAG_Byte(1)
+                        }
+                    )
                 case "minecraft:jigsaw":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "JigsawBlock"
                     )
@@ -363,13 +395,14 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         )
                     continue
                 case "minecraft:mob_spawner":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "MobSpawner"
                     )
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
                             "EntityIdentifier": TAG_String(
-                                block["nbt"]["SpawnData"]["id"].value
+                                block["nbt"]["SpawnData"]["entity"]["id"].value if "id" in block["nbt"]["SpawnData"]["entity"] else ""
                             ),
                             "Delay": TAG_Short(block["nbt"]["Delay"].value),
                             "MinSpawnDelay": TAG_Short(
@@ -389,22 +422,34 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         }
                     )
                     continue
-                case "minecraft:skull":
+                case "minecraft:skeleton_skull" | "minecraft:wither_skeleton_skull" | "minecraft:zombie_head" | "minecraft:player_head" | "minecraft:creeper_head" | "minecraft:dragon_head" | "minecraft:piglin_head":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Skull"
                     )
-                    block_position_data[str(index)]["block_entity_data"].update(
-                        {
-                            "rotation": TAG_Float(
-                                float(palette[entry]["Properties"]["rotation"].value)
-                            ),
-                            "SkullType": TAG_Byte(
-                                skullj2b[palette[entry]["Name"].value]
-                            ),
-                        }
-                    )
+                    try:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "Rotation": TAG_Float(
+                                    float(palette[entry]["Properties"]["rotation"].value) * 22.5
+                                ),
+                                "SkullType": TAG_Byte(-1
+                                    # skullj2b[palette[entry]["Name"].value]
+                                ),
+                            }
+                        )
+                    except:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "SkullType": TAG_Byte(-1
+                                    # skullj2b[palette[entry]["Name"].value]
+                                ),
+                            }
+                        )
+                    
                     continue
                 case "minecraft:structure_block":
+                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "StructureBlock"
                     )
@@ -422,7 +467,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     continue
                 case _:
                     continue
-
+    print(f"Finished applying block entity in {round((time() - startTime) * 1000, 2)} ms")
     newStructure = {
         "format_version": TAG_Int(1),
         "size": TAG_List(TAG_Int, oldsize),
@@ -451,3 +496,140 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
     }
 
     return NBTFile(value=newStructure), size * 8
+def banner_pattern(pattern):
+    match pattern:
+        case "minecraft:square_bottom_left":
+            return "bl"
+        case "minecraft:square_bottom_right":
+            return "br"
+        case "minecraft:square_top_left":
+            return "tl"
+        case "minecraft:square_top_right":
+            return "tr"
+        case "minecraft:stripe_bottom":
+            return "bs"
+        case "minecraft:stripe_top":
+            return "ts"
+        case "minecraft:stripe_left":
+            return "vh"
+        case "minecraft:stripe_right":
+            return "vhr"
+        case "minecraft:stripe_center":
+            return "cs"
+        case "minecraft:stripe_middle":
+            return "ms"
+        case "minecraft:stripe_downright":
+            return "drs"
+        case "minecraft:stripe_downleft":
+            return "dls"
+        case "minecraft:small_stripes":
+            return "ss"
+        case "minecraft:cross":
+            return "cr"
+        case "minecraft:straight_cross":
+            return "sc"
+        case "minecraft:circle":
+            return "mc"
+        case "minecraft:rhombus":
+            return "mr"
+        case "minecraft:border":
+            return "bo"
+        case "minecraft:triangle_bottom":
+            return "bt"
+        case "minecraft:triangle_top":
+            return "tt"
+        case "minecraft:triangles_bottom":
+            return "bts"
+        case "minecraft:triangles_top":
+            return "tts"
+        case "minecraft:half_horizontal_bottom":
+            return "hhb"
+        case "minecraft:half_horizontal":
+            return "hh"
+        case "minecraft:diagonal_left":
+            return "ld"
+        case "minecraft:diagonal_up_right":
+            return "rd"
+        case "minecraft:diagonal_up_left":
+            return "lud"
+        case "minecraft:diagonal_right":
+            return "rud"
+        case "minecraft:gradient_up":
+            return "gru"
+        case "minecraft:gradient":
+            return "gra"
+        case "minecraft:half_vertical":
+            return "vh"
+        case "minecraft:half_vertical_right":
+            return "vhr"
+        
+
+def banner_color(color):
+    match color:
+        case "white":
+            return 15
+        case "light_gray":
+            return 7
+        case "gray":
+            return 8
+        case "black":
+            return 0
+        case "brown":
+            return 3
+        case "red":
+            return 1
+        case "orange":
+            return 14
+        case "yellow":
+            return 11
+        case "lime":
+            return 10
+        case "green":
+            return 2
+        case "cyan":
+            return 6
+        case "light_blue":
+            return 12
+        case "blue":
+            return 4
+        case "purple":
+            return 5
+        case "magenta":
+            return 13
+        case "pink":
+            return 9
+
+def banner_base(banner):
+    match banner:
+        case "minecraft:white_banner" |  "minecraft:white_wall_banner":
+            return 15
+        case "minecraft:light_gray_banner" |  "minecraft:light_gray_wall_banner":
+            return 7
+        case "minecraft:gray_banner" |  "minecraft:gray_wall_banner":
+            return 8
+        case "minecraft:black_banner" |  "minecraft:black_wall_banner":
+            return 0
+        case "minecraft:brown_banner" |  "minecraft:brown_wall_banner":
+            return 3
+        case "minecraft:red_banner" |  "minecraft:red_wall_banner":
+            return 1
+        case "minecraft:orange_banner" |  "minecraft:orange_wall_banner":
+            return 14
+        case "minecraft:yellow_banner" |  "minecraft:yellow_wall_banner":
+            return 11
+        case "minecraft:lime_banner" |  "minecraft:lime_wall_banner":
+            return 10
+        case "minecraft:green_banner" |  "minecraft:green_wall_banner":
+            return 2
+        case "minecraft:cyan_banner" |  "minecraft:cyan_wall_banner":
+            return 6
+        case "minecraft:light_blue_banner" |  "minecraft:light_blue_wall_banner":
+            return 12
+        case "minecraft:blue_banner" |  "minecraft:blue_wall_banner":
+            return 4
+        case "minecraft:purple_banner" |  "minecraft:purple_wall_banner":
+            return 5
+        case "minecraft:magenta_banner" |  "minecraft:magenta_wall_banner":
+            return 13
+        case "minecraft:pink_banner" |  "minecraft:pink_wall_banner":
+            return 9

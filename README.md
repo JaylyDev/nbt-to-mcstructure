@@ -17,12 +17,29 @@ The reason this program is built in Python is because:
     ```
     pip install -r requirements.txt
     ```
+2. Navigate to the `cli` folder.
+3. To convert `.nbt` files to `.mcstructure`, put your Java nbt files in the `structures` folder.
 
-2. To convert `.nbt` files to `.mcstructure`, put your Java nbt files in the `structures` folder.
-
-3. Run `__main__.py`, the program converts all java structures in the `structures` folder to the bedrock structure format, and they should be generated in `structures` folder.
+4. Run `__main__.py`, the program converts all java structures in the `structures` folder to the bedrock structure format, and they should be generated in `structures` folder.
 
 ⚠️**Make sure your computer has enough memory and spaces on disk to convert large NBT files!**
+## Update Notes
+
+- Optimized the conversion speed and added a progress bar to the block entity conversion process.
+- Updated compatibility version: 1.21.70
+- Fixed the conversion of furnaces, blast furnaces, and smokers
+- Fixed the conversion of player heads and added head orientation
+- Fixed the azalea flowerpot naming issue
+- Fixed the direction error of trapdoors or doors
+- Added conversion of banners and banner patterns
+- Fixed the error when converting spawners. However, there are still some minor bugs: converting multiple spawners at the same time may result in incorrect mob types within the spawners.
+
+⚠️**This update only modifies the code in the `cli` folder. Please run `cd cli` and `python .` to use the new version, or download the latest release.**
+
+## Future Updates
+- Conversion of display frames
+- Complete conversion of spawners
+- Conversion of other entity blocks
 
 ## Regolith Filter
 
@@ -102,6 +119,7 @@ This approach saves space and simplifies configurations for large projects invol
 We welcome contributions to keep this converter up-to-date and efficient. For inquiries or to collaborate:
 - **JaylyDev**: Contact regarding the core program.
 - **ThijsHankelMC**: Contact regarding the Regolith Filter.
+- **rukiroki**: For bug fixes and version compatibility.
 
 Discord IDs:
 - **jaylymc**
