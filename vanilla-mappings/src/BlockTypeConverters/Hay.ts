@@ -6,7 +6,10 @@ export interface JavaHayProperties {
 export type BedrockHayProperties = Required<HayBlockStates>;
 export class HayTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaHayProperties): BedrockBlock<BedrockHayProperties> {
-        const state: BedrockHayProperties = {};
+        const state: BedrockHayProperties = {
+            pillar_axis: properties.axis,
+            deprecated: 0,
+        };
         // implement
         return { name: id, properties: state };
     }

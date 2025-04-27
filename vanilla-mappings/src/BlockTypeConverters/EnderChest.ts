@@ -7,7 +7,9 @@ export interface JavaEnderChestProperties {
 export type BedrockEnderChestProperties = Required<EnderChestStates>;
 export class EnderChestTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaEnderChestProperties): BedrockBlock<BedrockEnderChestProperties> {
-        const state: BedrockEnderChestProperties = {};
+        const state: BedrockEnderChestProperties = {
+            "minecraft:cardinal_direction": properties.facing,
+        };
         // implement
         return { name: id, properties: state };
     }
