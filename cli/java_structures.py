@@ -48,7 +48,7 @@ def getItems(items):
     for index in range(len(items)):
         itemsList.append(
             {
-                "Count": TAG_Byte(items[index].get("count").value),
+                "Count": TAG_Byte(items[index].get("count", items[index].get("Count")).value),
                 "Damage": TAG_Short(0),
                 "Name": TAG_String(items[index].get("id").value),
                 "Slot": TAG_Byte(items[index].get("Slot").value),
@@ -336,10 +336,10 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         )
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
-                            "BurnTime": TAG_Short(block["nbt"]["lit_time_remaining"].value),
-                            "CookTime": TAG_Short(block["nbt"]["cooking_time_spent"].value),
+                            "BurnTime": TAG_Short(block["nbt"].get("lit_time_remaining",block["nbt"].get("BurnTime")).value),
+                            "CookTime": TAG_Short(block["nbt"].get("cooking_time_spent",block["nbt"].get("CookTime")).value),
                             "BurnDuration": TAG_Short(
-                                block["nbt"]["lit_total_time"].value
+                                block["nbt"].get("lit_total_time",block["nbt"].get("CookTimeTotal")).value
                             ),
                             "Items": TAG_List(
                                 TAG_Compound, getItems(block["nbt"]["Items"])
@@ -402,7 +402,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     block_position_data[str(index)]["block_entity_data"].update(
                         {
                             "EntityIdentifier": TAG_String(
-                                block["nbt"]["SpawnData"]["entity"]["id"].value if "id" in block["nbt"]["SpawnData"]["entity"] else ""
+                                block["nbt"]["SpawnData"]["entity"]["id"].value if "entity" in block["nbt"]["SpawnData"] and "id" in block["nbt"]["SpawnData"]["entity"] else ""
                             ),
                             "Delay": TAG_Short(block["nbt"]["Delay"].value),
                             "MinSpawnDelay": TAG_Short(
