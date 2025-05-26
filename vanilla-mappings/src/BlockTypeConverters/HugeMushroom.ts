@@ -11,8 +11,14 @@ export interface JavaHugeMushroomProperties {
 export type BedrockHugeMushroomProperties = Required<BrownMushroomBlockStates>;
 export class HugeMushroomTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaHugeMushroomProperties): BedrockBlock<BedrockHugeMushroomProperties> {
-        const state: BedrockHugeMushroomProperties = {};
-        // implement
+        const { down, east, north, south, up, west } = properties;
+        const state: BedrockHugeMushroomProperties = {
+            huge_mushroom_bits: 0,
+        };
+        // down = true or east=true,north=true,south=true
+        if (down === "true" || (east === "true" && north === "true" && south === "true")) {
+            state.huge_mushroom_bits = 14;
+        }
         return { name: id, properties: state };
     }
 }

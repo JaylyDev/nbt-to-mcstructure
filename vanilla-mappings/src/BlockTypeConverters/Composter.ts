@@ -6,7 +6,9 @@ export interface JavaComposterProperties {
 export type BedrockComposterProperties = Required<ComposterStates>;
 export class ComposterTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaComposterProperties): BedrockBlock<BedrockComposterProperties> {
-        const state: BedrockComposterProperties = {};
+        const state: BedrockComposterProperties = {
+            composter_fill_level: parseInt(properties.level),
+        };
         // implement
         return { name: id, properties: state };
     }

@@ -34,7 +34,7 @@ with open(skullj2b_path, "r") as f:
 with open(blockstates_path, "r") as f:
     blockstates = json.load(f)
 
-MC_VERSION = "1.21.0.03"
+MC_VERSION = "1.21.70.03"
 
 def checkEntry(blocks, entry):
     for block in blocks:

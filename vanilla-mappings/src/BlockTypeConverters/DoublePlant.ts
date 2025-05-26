@@ -6,7 +6,10 @@ export interface JavaDoublePlantProperties {
 export type BedrockDoublePlantProperties = Required<LargeFernStates>;
 export class DoublePlantTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaDoublePlantProperties): BedrockBlock<BedrockDoublePlantProperties> {
-        const state: BedrockDoublePlantProperties = {};
+        const state: BedrockDoublePlantProperties = {
+            upper_block_bit: false,
+        };
+        if (properties.half === "upper") state.upper_block_bit = true;
         // implement
         return { name: id, properties: state };
     }

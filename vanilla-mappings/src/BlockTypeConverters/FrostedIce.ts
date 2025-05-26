@@ -6,7 +6,9 @@ export interface JavaFrostedIceProperties {
 export type BedrockFrostedIceProperties = Required<FrostedIceStates>;
 export class FrostedIceTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaFrostedIceProperties): BedrockBlock<BedrockFrostedIceProperties> {
-        const state: BedrockFrostedIceProperties = {};
+        const state: BedrockFrostedIceProperties = {
+            age: parseInt(properties.age),
+        };
         // implement
         return { name: id, properties: state };
     }

@@ -8,7 +8,11 @@ export interface JavaCreakingHeartProperties {
 export type BedrockCreakingHeartProperties = Required<CreakingHeartStates>;
 export class CreakingHeartTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaCreakingHeartProperties): BedrockBlock<BedrockCreakingHeartProperties> {
-        const state: BedrockCreakingHeartProperties = {};
+        const state: BedrockCreakingHeartProperties = {
+            active: false,
+            natural: false,
+            pillar_axis: properties.axis ?? "y",
+        };
         // implement
         return { name: id, properties: state };
     }

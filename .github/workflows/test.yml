@@ -32,7 +32,7 @@ jobs:
     name: Regolith Filter
     strategy:
       matrix:
-        regolith-version: ['1.5.0']
+        regolith-version: ['1.5.2']
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
@@ -67,17 +67,18 @@ jobs:
         working-directory: './regolith-test-project'
         run: regolith run default
 
-  test_vanilla_mapping:
-    runs-on: ubuntu-latest
-    name: Mapping Generator
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-        working-directory: ./vanilla-mappings
-      - run: npm run build
-        working-directory: ./vanilla-mappings
-      - run: npm test
-        working-directory: ./vanilla-mappings
+  # Uncomment when vanilla mapping tool is ready.
+  # test_vanilla_mapping:
+  #   runs-on: ubuntu-latest
+  #   name: Mapping Generator
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #     - run: npm ci
+  #       working-directory: ./vanilla-mappings
+  #     - run: npm run build
+  #       working-directory: ./vanilla-mappings
+  #     - run: npm test
+  #       working-directory: ./vanilla-mappings

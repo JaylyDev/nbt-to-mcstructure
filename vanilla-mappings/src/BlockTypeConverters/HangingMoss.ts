@@ -6,7 +6,10 @@ export interface JavaHangingMossProperties {
 export type BedrockHangingMossProperties = Required<PaleHangingMossStates>;
 export class HangingMossTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaHangingMossProperties): BedrockBlock<BedrockHangingMossProperties> {
-        const state: BedrockHangingMossProperties = {};
+        const state: BedrockHangingMossProperties = {
+            tip: false,
+        };
+        if (properties.tip === "true") state.tip = true;
         // implement
         return { name: id, properties: state };
     }

@@ -6,7 +6,9 @@ export interface JavaCoralFanProperties {
 export type BedrockCoralFanProperties = Required<BrainCoralFanStates>;
 export class CoralFanTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaCoralFanProperties): BedrockBlock<BedrockCoralFanProperties> {
-        const state: BedrockCoralFanProperties = {};
+        const state: BedrockCoralFanProperties = {
+            coral_fan_direction: 0,
+        };
         // implement
         return { name: id, properties: state };
     }

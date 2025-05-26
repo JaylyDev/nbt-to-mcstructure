@@ -11,7 +11,10 @@ export interface JavaFireProperties {
 export type BedrockFireProperties = Required<FireStates>;
 export class FireTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaFireProperties): BedrockBlock<BedrockFireProperties> {
-        const state: BedrockFireProperties = {};
+        const state: BedrockFireProperties = {
+            age: parseInt(properties.age),
+        };
+
         // implement
         return { name: id, properties: state };
     }

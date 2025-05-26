@@ -6,7 +6,9 @@ export interface JavaCropProperties {
 export type BedrockCropProperties = Required<WheatStates>;
 export class CropTypeConverter extends BlockTypeConverterBase {
     public convert(id: string, properties: JavaCropProperties): BedrockBlock<BedrockCropProperties> {
-        const state: BedrockCropProperties = {};
+        const state: BedrockCropProperties = {
+            growth: parseInt(properties.age),
+        };
         // implement
         return { name: id, properties: state };
     }
