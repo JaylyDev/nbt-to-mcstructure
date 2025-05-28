@@ -17,8 +17,8 @@ jobs:
     strategy:
       matrix:
         cfg:
-          - { os: windows-latest, python-version: "3.10", architecture: x64 }
-          # - { os: windows-latest, python-version: "3.10", architecture: x86 }
+          - { os: windows-latest, python-version: "3.11", architecture: x64 }
+          - { os: windows-latest, python-version: "3.11", architecture: x86 }
 
     steps:
       - uses: actions/checkout@v3
@@ -33,6 +33,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller pillow
+
+      - name: Clone and Build PyInstaller Bootloader
+        run: |
+          git clone https://github.com/pyinstaller/pyinstaller.git --depth 1
+          cd pyinstaller/bootloader
+          python ./waf all
+          cd ../..
+        shell: bash
+
+      - name: Install PyInstaller with Custom Bootloader
+        run: pip install ./pyinstaller
 
       - name: PyInstaller build
         run: python -m PyInstaller -y nbt-to-mcstructure.spec
