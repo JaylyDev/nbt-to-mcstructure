@@ -20,6 +20,8 @@ The reason this program is built in Python is because:
 
 ## Usage
 
+### Running Directly
+
 1. Install required dependencies via:
    ```
    pip install -r requirements.txt
@@ -28,6 +30,14 @@ The reason this program is built in Python is because:
 3. To convert `.nbt` files to `.mcstructure`, put your Java nbt files in the `structures` folder.
 
 4. Run `__main__.py`, the program converts all java structures in the `structures` folder to the bedrock structure format, and they should be generated in `structures` folder.
+
+### Using Nix
+
+1. Put your Java `.nbt` files in `./structures` folder.
+2. Run:
+  ```
+  nix run github:JaylyDev/nbt-to-mcstructure
+  ```
 
 ## Update Notes
 
