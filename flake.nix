@@ -14,7 +14,7 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
 
-      pythonOverlay = pkgs.callPackage ./python-packages.nix {};
+      pythonOverlay = pkgs.callPackage ./nix/python-packages.nix {};
       customPython = pkgs.python3.override {
         packageOverrides = pythonOverlay;
       };
@@ -28,12 +28,7 @@
     in {
       packages.default = customPython.pkgs.buildPythonApplication {
         inherit pname version;
-        src = pkgs.fetchFromGitHub {
-          owner = "JaylyDev";
-          repo = "nbt-to-mcstructure";
-          rev = "main";
-          hash = "sha256-Dq65Jc+3+Chh7GQEQk0eodduFizrApUXyALc/uk7Jm0=";
-        };
+        src = ./.;
         format = "other";
 
         propagatedBuildInputs = [pythonEnv];
