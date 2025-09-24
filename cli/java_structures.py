@@ -382,10 +382,16 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                                 block["nbt"]["final_state"].value
                             ),
                             "joint": TAG_String(block["nbt"]["joint"].value),
+                            "placement_priority": TAG_Int(
+                                block["nbt"]["placement_priority"].value
+                            ),
+                            "selection_priority": TAG_Int(
+                                block["nbt"]["selection_priority"].value
+                            )
                         }
                     )
 
-                    if "target_pool" in block["nbt"]:
+                    if "pool" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"].update(
                             {
                                 "target_pool": TAG_String(
