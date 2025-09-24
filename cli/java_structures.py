@@ -395,7 +395,7 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         block_position_data[str(index)]["block_entity_data"].update(
                             {
                                 "target_pool": TAG_String(
-                                    block["nbt"]["target_pool"].value
+                                    block["nbt"]["pool"].value
                                 ),
                             }
                         )
