@@ -382,14 +382,37 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                                 block["nbt"]["final_state"].value
                             ),
                             "joint": TAG_String(block["nbt"]["joint"].value),
-                            "placement_priority": TAG_Int(
-                                block["nbt"]["placement_priority"].value
-                            ),
-                            "selection_priority": TAG_Int(
-                                block["nbt"]["selection_priority"].value
-                            )
                         }
                     )
+                    if ("selection_priority" in block["nbt"]):
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "selection_priority": TAG_Int(
+                                    block["nbt"]["selection_priority"].value
+                                ),
+                            }
+                        )
+                    else:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "selection_priority": TAG_Int(0),
+                            }
+                        )
+
+                    if ("placement_priority" in block["nbt"]):
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "placement_priority": TAG_Int(
+                                    block["nbt"]["placement_priority"].value
+                                ),
+                            }
+                        )
+                    else:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "placement_priority": TAG_Int(0),
+                            }
+                        )
 
                     if "pool" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"].update(
