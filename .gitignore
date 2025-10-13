@@ -157,3 +157,7 @@ cython_debug/
 
 # Testing Folders
 /test
+
+# Development environment
+.envrc
+.direnv
