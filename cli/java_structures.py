@@ -409,12 +409,41 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                             "joint": TAG_String(block["nbt"]["joint"].value),
                         }
                     )
+                    if ("selection_priority" in block["nbt"]):
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "selection_priority": TAG_Int(
+                                    block["nbt"]["selection_priority"].value
+                                ),
+                            }
+                        )
+                    else:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "selection_priority": TAG_Int(0),
+                            }
+                        )
 
-                    if "target_pool" in block["nbt"]:
+                    if ("placement_priority" in block["nbt"]):
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "placement_priority": TAG_Int(
+                                    block["nbt"]["placement_priority"].value
+                                ),
+                            }
+                        )
+                    else:
+                        block_position_data[str(index)]["block_entity_data"].update(
+                            {
+                                "placement_priority": TAG_Int(0),
+                            }
+                        )
+
+                    if "pool" in block["nbt"]:
                         block_position_data[str(index)]["block_entity_data"].update(
                             {
                                 "target_pool": TAG_String(
-                                    block["nbt"]["target_pool"].value
+                                    block["nbt"]["pool"].value
                                 ),
                             }
                         )
