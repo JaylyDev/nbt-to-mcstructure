@@ -386,6 +386,16 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         }
                     )
                 case "minecraft:jigsaw":
+                    # NOTE: We intentionally DO NOT call checkEntry() here. Earlier in the loop we
+                    # stored the exact Java block reference for this linear index inside
+                    # original_blocks_by_index and retrieved it into the local variable `block`.
+                    # Re‑querying by palette state (old behaviour) returns the FIRST block sharing
+                    # that palette entry, producing duplicated / wrong source positions in logs and
+                    # incorrect NBT data assignment. Using the precise `block` preserves the unique
+                    # coordinates for every jigsaw.
+                    if block is None:
+                        # Extremely unlikely, but guard to avoid crashes and aid diagnostics.
+                        continue
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "JigsawBlock"
                     )
