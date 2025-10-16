@@ -36,20 +36,6 @@ with open(blockstates_path, "r") as f:
 
 MC_VERSION = "1.21.70.03"
 
-def checkEntry(blocks, entry):
-    """Legacy helper: returns the FIRST block whose palette state index matches 'entry'.
-    Deprecated in favor of the precise mapping original_blocks_by_index created
-    during the linear block allocation phase. Leaving it here for backwards
-    compatibility / potential other callers, but it should not be used for
-    block entity generation because multiple blocks can share the same palette
-    state causing ambiguous / duplicated positions in logs.
-    """
-    for block in blocks:
-        if block["state"].value == entry:
-            return block
-    return None  # Explicit None if not found
-
-
 def getItems(items):
     itemsList = []
 
@@ -66,7 +52,6 @@ def getItems(items):
 
     return itemsList
 
-
 def createDefaultBlockEntity(block, id):
     return TAG_Compound(
         {
@@ -82,7 +67,6 @@ def createDefaultBlockEntity(block, id):
         }
     )
 
-
 def getHex(n):
     output = hex(int(n))[2:]
     if len(output) < 2:
@@ -93,10 +77,8 @@ def getVersion(versionString: str) -> int:
     version = versionString.split(".")
     return eval(f"0x{''.join(map(getHex, version))}")
 
-
 def getStructureBlockIndex(distY, distZ, x, y, z):
     return ((distY * distZ) * x) + ((distZ) * y) + z
-
 
 def getDynamicBlockIdentifier(blockobject):
     baseidentifier = "minecraft:air"
@@ -128,7 +110,6 @@ def getDynamicBlockIdentifier(blockobject):
         properties.append(statename + "=" + stateslist[statename])
 
     return baseidentifier + "[" + ",".join(properties) + "]"
-
 
 def getBlockObject(dynamicblockid: str, format="bedrock"):
     baseidentifier = dynamicblockid.split("[")[0]
