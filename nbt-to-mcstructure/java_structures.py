@@ -36,12 +36,6 @@ with open(blockstates_path, "r") as f:
 
 MC_VERSION = "1.21.70.03"
 
-def checkEntry(blocks, entry):
-    for block in blocks:
-        if block["state"].value == entry:
-            return block
-
-
 def getItems(items):
     itemsList = []
 
@@ -58,7 +52,6 @@ def getItems(items):
 
     return itemsList
 
-
 def createDefaultBlockEntity(block, id):
     return TAG_Compound(
         {
@@ -74,7 +67,6 @@ def createDefaultBlockEntity(block, id):
         }
     )
 
-
 def getHex(n):
     output = hex(int(n))[2:]
     if len(output) < 2:
@@ -85,10 +77,8 @@ def getVersion(versionString: str) -> int:
     version = versionString.split(".")
     return eval(f"0x{''.join(map(getHex, version))}")
 
-
 def getStructureBlockIndex(distY, distZ, x, y, z):
     return ((distY * distZ) * x) + ((distZ) * y) + z
-
 
 def getDynamicBlockIdentifier(blockobject):
     baseidentifier = "minecraft:air"
@@ -120,7 +110,6 @@ def getDynamicBlockIdentifier(blockobject):
         properties.append(statename + "=" + stateslist[statename])
 
     return baseidentifier + "[" + ",".join(properties) + "]"
-
 
 def getBlockObject(dynamicblockid: str, format="bedrock"):
     baseidentifier = dynamicblockid.split("[")[0]
@@ -178,6 +167,10 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
     newBlocks = []
     newBlocks2 = []
     newPalette = []
+    # Mapping from linear block index -> original Java block object (with pos + nbt)
+    # This lets us recover the exact block (and its unique position) later when
+    # generating Block Entity NBT, instead of heuristically searching by palette 'state'.
+    original_blocks_by_index = {}
 
     # new blocks
     startTime = time()
@@ -199,6 +192,9 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
         )
         newBlocks[index] = block["state"].value        
         blockobject = palette[block["state"].value]
+
+        # Store exact block reference for later block entity resolution
+        original_blocks_by_index[index] = block
 
         # Apply waterlogged block operation (waterlogged block is appended to pallete list last)
         if "Properties" in blockobject and "waterlogged" in blockobject["Properties"] and blockobject["Properties"]["waterlogged"].value == "true":
@@ -238,9 +234,16 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
 
     for index, entry in enumerate(track(newBlocks,description="[green]Applying block entity")):
         if entry != -1:
+            # Retrieve the exact original Java block for this linear index.
+            # Previous implementation used checkEntry(blocks, entry) which returns the FIRST block whose palette state index matches.
+            # That caused duplicate reported positions for different linear indices when multiple blocks shared the same palette state.
+            block = original_blocks_by_index.get(index)
+            if block is None:
+                # Should not happen; log diagnostic info and skip.
+                print(f"[WARN] No original block found at linear index {index} (palette state {entry})")
+                continue
             match newPalette[entry]["name"].value:
                 case "minecraft:bed":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Bed"
                     )
@@ -249,7 +252,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:brewing_stand":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "BrewingStand"
                     )
@@ -263,7 +265,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:chest" | "minecraft:trapped_chest" | "minecraft:barrel":
-                    block = checkEntry(blocks, entry)
                     if newPalette[entry]["name"].value == "minecraft:barrel":
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Barrel"
@@ -295,7 +296,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         )
                     continue
                 case "minecraft:comparator":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Comparator"
                     )
@@ -304,7 +304,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:flower_pot":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "FlowerPot"
                     )
@@ -321,7 +320,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:furnace" | "minecraft:lit_furnace" | "minecraft:blast_furnace" | "minecraft:lit_blast_furnace" | "minecraft:smoker" | "minecraft:lit_smoker":
-                    block = checkEntry(blocks, entry)
                     if newPalette[entry]["name"].value in ["minecraft:furnace", "minecraft:lit_furnace"]:
                         block_position_data[str(index)] = createDefaultBlockEntity(
                             block, "Furnace"
@@ -348,7 +346,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:standing_banner" | "minecraft:wall_banner":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Banner"
                     )
@@ -370,7 +367,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         }
                     )
                 case "minecraft:jigsaw":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "JigsawBlock"
                     )
@@ -424,7 +420,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                         )
                     continue
                 case "minecraft:mob_spawner":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "MobSpawner"
                     )
@@ -452,7 +447,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     )
                     continue
                 case "minecraft:skeleton_skull" | "minecraft:wither_skeleton_skull" | "minecraft:zombie_head" | "minecraft:player_head" | "minecraft:creeper_head" | "minecraft:dragon_head" | "minecraft:piglin_head":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "Skull"
                     )
@@ -478,7 +472,6 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                     
                     continue
                 case "minecraft:structure_block":
-                    block = checkEntry(blocks, entry)
                     block_position_data[str(index)] = createDefaultBlockEntity(
                         block, "StructureBlock"
                     )
