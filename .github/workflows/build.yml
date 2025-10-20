@@ -67,8 +67,7 @@ jobs:
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release upload ${{ github.event.release.tag_name }} ./dist/${{ env.BUILT_PATH }} --clobber
+        run: gh release upload ${{ github.event.release.tag_name }} ./dist/${{ env.BUILT_PATH }} --clobber
 
       - name: Create Regolith Tag
         run: |
