@@ -69,3 +69,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload ${{ github.event.release.tag_name }} ./dist/${{ env.BUILT_PATH }} --clobber
+
+      - name: Create Regolith Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          build_tag="nbt-to-mcstructure-${{ github.event.release.tag_name }}"
+          git tag $build_tag
+          git push origin $build_tag
