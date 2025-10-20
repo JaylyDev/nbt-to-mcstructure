@@ -65,11 +65,7 @@ jobs:
           cd ..
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./dist/${{ env.BUILT_PATH }}
-          asset_name: ${{ env.BUILT_PATH }}
-          asset_content_type: application/zip
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} ./dist/${{ env.BUILT_PATH }} --clobber
