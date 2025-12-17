@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nbt-to-mcstructure"
+version = "0.6.5"
+requires-python = ">=3.12"
+dependencies = [
+    "markdown-it-py==3.0.0",
+    "mdurl==0.1.2",
+    "mutf8==1.0.6",
+    "pygments==2.19.1",
+    "rich==14.0.0",
+]
