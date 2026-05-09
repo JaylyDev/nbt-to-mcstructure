@@ -10,7 +10,7 @@ dependencies = [
     "markdown-it-py==3.0.0",
     "mdurl==0.1.2",
     "mutf8==1.0.6",
-    "pygments==2.19.1",
+    "pygments==2.20.0",
     "rich==14.0.0",
 ]
 
