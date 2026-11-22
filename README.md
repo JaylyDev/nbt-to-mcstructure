@@ -141,6 +141,16 @@ You can use a wildcard to reduce redundancy:
 
 This approach saves space and simplifies configurations for large projects involving multiple similar structures, such as trees, houses, or castles.
 
+### Keeping `.nbt` Files
+
+By default, `.nbt` files are deleted after they are converted. Set `delete_nbt_files` to `false` to keep them:
+
+```jsonc
+{
+  "delete_nbt_files": false,
+}
+```
+
 ## Contributing
 
 We welcome contributions to keep this converter up-to-date and efficient. For inquiries or to collaborate:

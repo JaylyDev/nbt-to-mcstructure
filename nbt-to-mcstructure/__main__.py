@@ -22,6 +22,7 @@ class BlockMappingEntry(TypedDict):
 class Settings(TypedDict):
     """Contents of settings.json."""
     block_mapping: NotRequired[list[BlockMappingEntry]]
+    delete_nbt_files: NotRequired[bool]
 
 def get_block_mapping(structure_id: str, settings: Settings) -> dict[str, str]:
     for entry in settings.get("block_mapping", []):
@@ -124,10 +125,11 @@ def main():
             convert(file, settings)
 
         # Delete .nbt files after processing
-        for file in nbtFiles:
-            try:
-                remove(file)
-            except Exception as e:
-                print(f"Error deleting file {file}: {e}")
+        if settings.get("delete_nbt_files", True):
+            for file in nbtFiles:
+                try:
+                    remove(file)
+                except Exception as e:
+                    print(f"Error deleting file {file}: {e}")
 
 main()
