@@ -197,6 +197,13 @@
     ],
     "type": "int"
   },
+  "bottom": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
   "brewing_stand_slot_a_bit": {
     "values": [
       false,
@@ -388,6 +395,14 @@
       true
     ],
     "type": "bool"
+  },
+  "creaking_heart_state": {
+    "values": [
+      "uprooted",
+      "dormant",
+      "awake"
+    ],
+    "type": "string"
   },
   "damage": {
     "values": [
@@ -756,6 +771,13 @@
     ],
     "type": "bool"
   },
+  "locked": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
   "minecraft:block_face": {
     "values": [
       "down",
@@ -776,6 +798,58 @@
     ],
     "type": "string"
   },
+  "minecraft:connection_down": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:connection_east": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:connection_north": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:connection_south": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:connection_up": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:connection_west": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
+  "minecraft:corner": {
+    "values": [
+      "none",
+      "inner_left",
+      "inner_right",
+      "outer_left",
+      "outer_right"
+    ],
+    "type": "string"
+  },
   "minecraft:facing_direction": {
     "values": [
       "down",
@@ -786,6 +860,36 @@
       "east"
     ],
     "type": "string"
+  },
+  "minecraft:multi_block_part": {
+    "values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "int"
+  },
+  "minecraft:sixteen_way_rotation": {
+    "values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "type": "int"
   },
   "minecraft:vertical_half": {
     "values": [
@@ -887,6 +991,13 @@
     ],
     "type": "int"
   },
+  "natural": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
+  },
   "new_leaf_type": {
     "values": [
       "acacia",
@@ -978,6 +1089,38 @@
     ],
     "type": "bool"
   },
+  "pale_moss_carpet_side_east": {
+    "values": [
+      "none",
+      "short",
+      "tall"
+    ],
+    "type": "string"
+  },
+  "pale_moss_carpet_side_north": {
+    "values": [
+      "none",
+      "short",
+      "tall"
+    ],
+    "type": "string"
+  },
+  "pale_moss_carpet_side_south": {
+    "values": [
+      "none",
+      "short",
+      "tall"
+    ],
+    "type": "string"
+  },
+  "pale_moss_carpet_side_west": {
+    "values": [
+      "none",
+      "short",
+      "tall"
+    ],
+    "type": "string"
+  },
   "persistent_bit": {
     "values": [
       false,
@@ -1001,12 +1144,31 @@
     ],
     "type": "string"
   },
+  "potent_sulfur_state": {
+    "values": [
+      "dry",
+      "wet",
+      "dormant",
+      "erupting",
+      "continuous"
+    ],
+    "type": "string"
+  },
   "powered_bit": {
     "values": [
       false,
       true
     ],
     "type": "bool"
+  },
+  "powered_shelf_type": {
+    "values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "int"
   },
   "prismarine_block_type": {
     "values": [
@@ -1048,6 +1210,22 @@
     ],
     "type": "int"
   },
+  "redstone_east": {
+    "values": [
+      "none",
+      "side",
+      "up"
+    ],
+    "type": "string"
+  },
+  "redstone_north": {
+    "values": [
+      "none",
+      "side",
+      "up"
+    ],
+    "type": "string"
+  },
   "redstone_signal": {
     "values": [
       0,
@@ -1066,6 +1244,31 @@
       13,
       14,
       15
+    ],
+    "type": "int"
+  },
+  "redstone_south": {
+    "values": [
+      "none",
+      "side",
+      "up"
+    ],
+    "type": "string"
+  },
+  "redstone_west": {
+    "values": [
+      "none",
+      "side",
+      "up"
+    ],
+    "type": "string"
+  },
+  "rehydration_level": {
+    "values": [
+      0,
+      1,
+      2,
+      3
     ],
     "type": "int"
   },
@@ -1120,7 +1323,8 @@
       "birch",
       "jungle",
       "acacia",
-      "dark_oak"
+      "dark_oak",
+      "pale_oak"
     ],
     "type": "string"
   },
@@ -1278,6 +1482,13 @@
       "snow"
     ],
     "type": "string"
+  },
+  "tip": {
+    "values": [
+      false,
+      true
+    ],
+    "type": "bool"
   },
   "toggle_bit": {
     "values": [
