@@ -3,15 +3,15 @@ import pathlib
 import gzip
 import pynbt
 from time import time
-from java_structures import javaToBedrock
+from java_structures import javaToBedrock, config
 from os import listdir, makedirs, remove
 from os.path import isfile, join, isdir
 import threading
 import json
 import re
 
-structurePath = 'structures'  # Path of structures
-settings_path = './settings.json'
+structurePath = config['structures_path']
+settings_path = config['settings_path']
 
 def get_block_mapping(structure_id: str, settings: dict):
     for entry in settings.get("block_mapping", []):

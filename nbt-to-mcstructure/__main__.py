@@ -3,22 +3,17 @@ import pathlib
 import gzip
 import pynbt
 from time import time
-from java_structures import javaToBedrock
+from java_structures import javaToBedrock, config
 from os import listdir, makedirs, remove
 from os.path import isfile, join, isdir
 import threading
 import json
 import re
 
-structurePath = 'BP/structures'  # Path of structures
-settings_path = './data/nbt-to-mcstructure/settings.json'
+structurePath = config['structures_path']
+settings_path = config['settings_path']
 
-# Load settings file
-with open(settings_path, "r") as f:
-    json_file = f.read()
-    settings = json.loads(json_file)
-
-def get_block_mapping(structure_id):
+def get_block_mapping(structure_id: str, settings: dict):
     for entry in settings.get("block_mapping", []):
         pattern = entry["structure_id"]
         if "*" in pattern:
@@ -32,7 +27,7 @@ def get_block_mapping(structure_id):
 def get_structure_id(file_path: str) -> str:
     return pathlib.Path(file_path).stem
 
-def convert(file):
+def convert(file: str, settings: dict):
     mcstructureFile = file.replace(pathlib.Path(file).suffix, '') + '.mcstructure'
     structure_id = get_structure_id(file)
     print(f"Converting '{file}' to '{mcstructureFile}' with structure ID '{structure_id}'")
@@ -46,7 +41,7 @@ def convert(file):
     print(f"Loaded {file} in {round((time() - startTime) * 1000, 2)} ms")
 
     # Get custom mapping
-    block_mapping = get_block_mapping(structure_id)
+    block_mapping = get_block_mapping(structure_id, settings)
 
     mcstructure, size = javaToBedrock(nbt, structure_id, block_mapping)
     startTime = time()
@@ -102,13 +97,22 @@ def get_nbtFiles(dirpath: str) -> list[str]:
 ## MAIN
 ## -----------
 def main():
+    # Load settings file
+    if isfile(settings_path):
+        f = open(settings_path, "r")
+        json_file = f.read()
+        settings = json.loads(json_file)
+    else:
+        settings = {}
+    
+    # Convert structures
     makedirs(structurePath, exist_ok=True)
     nbtFiles = get_nbtFiles(structurePath)
     if len(nbtFiles) == 0:
         print(f"There are 0 .nbt files in '{structurePath}' folder.")
     else:
         for file in nbtFiles:
-            convert(file=file)
+            convert(file, settings)
 
         # Delete .nbt files after processing
         for file in nbtFiles:

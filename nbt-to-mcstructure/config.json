@@ -1,0 +1,5 @@
+{
+    "structures_path": "BP/structures",
+    "settings_path": "data/nbt-to-mcstructure/settings.json",
+    "data_path": "."
+}

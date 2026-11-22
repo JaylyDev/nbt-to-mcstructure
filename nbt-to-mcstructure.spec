@@ -1,11 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import os
+import shutil
 
 a = Analysis(
     ['cli/__main__.py'],
     pathex=[],
     binaries=[],
-    datas=[('./cli/data', 'data')],
+    datas=[('./cli/data', 'data'), ('./cli/config.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -43,4 +44,11 @@ coll = COLLECT(
     upx=False,
     upx_exclude=[],
     name='',
+)
+
+# The structures folder ships next to the exe, where users drop their .nbt files
+shutil.copytree(
+    os.path.join(SPECPATH, 'structures'),
+    os.path.join(DISTPATH, 'structures'),
+    dirs_exist_ok=True
 )

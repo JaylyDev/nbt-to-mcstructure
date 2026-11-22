@@ -16,11 +16,16 @@ from progress_bar import track
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
+# config.json sits next to this script and differs between the CLI and the Regolith filter
+with open(os.path.join(script_dir, "config.json"), "r") as f:
+    config = json.load(f)
+data_dir = os.path.join(script_dir, config["data_path"])
+
 # Construct full paths to your files
-blocksj2b_path = os.path.join(script_dir, "data", "blocksJ2B.json")
-bedsj2b_path = os.path.join(script_dir, "data", "bedsJ2B.json")
-skullj2b_path = os.path.join(script_dir, "data", "skullJ2B.json")
-blockstates_path = os.path.join(script_dir, "data", "blockstates.json")
+blocksj2b_path = os.path.join(data_dir, "blocksJ2B.json")
+bedsj2b_path = os.path.join(data_dir, "bedsJ2B.json")
+skullj2b_path = os.path.join(data_dir, "skullJ2B.json")
+blockstates_path = os.path.join(data_dir, "blockstates.json")
 
 # Load JSON files
 with open(blocksj2b_path, "r") as f:
