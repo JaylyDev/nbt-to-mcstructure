@@ -10,6 +10,7 @@ from pynbt import (
     TAG_Byte,
     TAG_Short,
     TAG_Float,
+    TAG_Long,
 )
 from progress_bar import track
 
@@ -66,6 +67,20 @@ def createDefaultBlockEntity(block, id):
             )
         }
     )
+
+def getCustomName(custom_name):
+    """Reads the plain text of a Java CustomName, stored as JSON text or an NBT text component.
+    @param custom_name Java CustomName tag.
+    """
+    if isinstance(custom_name, TAG_Compound):
+        return custom_name["text"].value if "text" in custom_name else ""
+    try:
+        text = json.loads(custom_name.value)
+    except json.JSONDecodeError:
+        return custom_name.value
+    if isinstance(text, dict):
+        return text.get("text", "")
+    return text if isinstance(text, str) else custom_name.value
 
 def getHex(n):
     output = hex(int(n))[2:]
@@ -293,6 +308,43 @@ def javaToBedrock(structure: NBTFile, structure_id: str, block_mapping: dict):
                                     TAG_Compound, getItems(block["nbt"]["Items"])
                                 )
                             }
+                        )
+                    continue
+                case "minecraft:command_block" | "minecraft:repeating_command_block" | "minecraft:chain_command_block":
+                    nbt = block["nbt"]
+                    # Bedrock LPCommandMode: 0 impulse, 1 repeating, 2 chain
+                    command_mode = ["minecraft:command_block", "minecraft:repeating_command_block", "minecraft:chain_command_block"].index(newPalette[entry]["name"].value)
+                    auto = nbt["auto"].value if "auto" in nbt else 0
+                    conditional = newPalette[entry]["states"]["conditional_bit"].value
+                    custom_name = getCustomName(nbt["CustomName"]) if "CustomName" in nbt else ""
+                    block_position_data[str(index)] = createDefaultBlockEntity(
+                        block, "CommandBlock"
+                    )
+                    block_position_data[str(index)]["block_entity_data"].update(
+                        {
+                            "Command": TAG_String(nbt["Command"].value if "Command" in nbt else ""),
+                            "CustomName": TAG_String("" if custom_name == "@" else custom_name),
+                            "ExecuteOnFirstTick": TAG_Byte(1),
+                            "LPCommandMode": TAG_Int(command_mode),
+                            "LPCondionalMode": TAG_Byte(conditional),
+                            "LPRedstoneMode": TAG_Byte(1 - auto),
+                            "LastExecution": TAG_Long(0),
+                            "LastOutput": TAG_String(""),
+                            "LastOutputParams": TAG_List(TAG_String, []),
+                            "SuccessCount": TAG_Int(nbt["SuccessCount"].value if "SuccessCount" in nbt else 0),
+                            "TickDelay": TAG_Int(0),
+                            "TrackOutput": TAG_Byte(nbt["TrackOutput"].value if "TrackOutput" in nbt else 1),
+                            "Version": TAG_Int(46),
+                            "auto": TAG_Byte(auto),
+                            "conditionMet": TAG_Byte(nbt["conditionMet"].value if "conditionMet" in nbt else 0),
+                            "conditionalMode": TAG_Byte(conditional),
+                            "powered": TAG_Byte(nbt["powered"].value if "powered" in nbt else 0),
+                        }
+                    )
+                    # Bedrock only starts ticking a loaded command block when it has a scheduled tick
+                    if command_mode != 2 and auto == 1:
+                        block_position_data[str(index)]["tick_queue_data"] = TAG_List(
+                            TAG_Compound, [TAG_Compound({"tick_delay": TAG_Int(1)})]
                         )
                     continue
                 case "minecraft:comparator":
