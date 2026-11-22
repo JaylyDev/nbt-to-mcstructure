@@ -9,11 +9,21 @@ from os.path import isfile, join, isdir
 import threading
 import json
 import re
+from typing import NotRequired, TypedDict
 
 structurePath = config['structures_path']
 settings_path = config['settings_path']
 
-def get_block_mapping(structure_id: str, settings: dict):
+class BlockMappingEntry(TypedDict):
+    """Block replacements for structures whose ID matches structure_id, which may contain * wildcards."""
+    structure_id: str
+    mapping: dict[str, str]
+
+class Settings(TypedDict):
+    """Contents of settings.json."""
+    block_mapping: NotRequired[list[BlockMappingEntry]]
+
+def get_block_mapping(structure_id: str, settings: Settings) -> dict[str, str]:
     for entry in settings.get("block_mapping", []):
         pattern = entry["structure_id"]
         if "*" in pattern:
@@ -27,7 +37,7 @@ def get_block_mapping(structure_id: str, settings: dict):
 def get_structure_id(file_path: str) -> str:
     return pathlib.Path(file_path).stem
 
-def convert(file: str, settings: dict):
+def convert(file: str, settings: Settings):
     mcstructureFile = file.replace(pathlib.Path(file).suffix, '') + '.mcstructure'
     structure_id = get_structure_id(file)
     print(f"Converting '{file}' to '{mcstructureFile}' with structure ID '{structure_id}'")
@@ -98,12 +108,11 @@ def get_nbtFiles(dirpath: str) -> list[str]:
 ## -----------
 def main():
     # Load settings file
+    settings: Settings = {}
     if isfile(settings_path):
         f = open(settings_path, "r")
         json_file = f.read()
         settings = json.loads(json_file)
-    else:
-        settings = {}
     
     # Convert structures
     makedirs(structurePath, exist_ok=True)
