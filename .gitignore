@@ -160,6 +160,7 @@ uv.lock
 
 # Bedrock Structures
 *.mcstructure
+!tests/**/*.mcstructure
 
 # Testing Folders
 /test

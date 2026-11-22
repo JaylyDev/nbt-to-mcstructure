@@ -22,3 +22,13 @@ package-dir = {"" = "cli"}
 
 [tool.setuptools.packages.find]
 where = ["cli"]
+
+
+[dependency-groups]
+dev = ["pytest==9.2.0"]
+
+[tool.pytest]
+strict = true
+addopts = ["--import-mode=importlib"]
+testpaths = ["tests"]
+pythonpath = ["cli"]

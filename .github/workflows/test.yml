@@ -21,12 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
             pip install --upgrade pip
-            python -m pip install .[dev]
+            python -m pip install . --group dev
 
-      - run: unzip assets/vanilla_structures.zip -d structures
+      - run: python -m pytest
 
-      - run: python cli/__main__.py
-      
   test_regolith_filter:
     runs-on: ubuntu-latest
     name: Regolith Filter
@@ -66,19 +64,3 @@ jobs:
         shell: bash
         working-directory: './regolith-test-project'
         run: regolith run default
-
-  # Uncomment when vanilla mapping tool is ready.
-  # test_vanilla_mapping:
-  #   runs-on: ubuntu-latest
-  #   name: Mapping Generator
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-  #     - run: npm ci
-  #       working-directory: ./vanilla-mappings
-  #     - run: npm run build
-  #       working-directory: ./vanilla-mappings
-  #     - run: npm test
-  #       working-directory: ./vanilla-mappings
