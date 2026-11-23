@@ -164,3 +164,7 @@ uv.lock
 
 # Testing Folders
 /test
+
+# Development environment
+.envrc
+.direnv
